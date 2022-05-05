@@ -1,0 +1,48 @@
+body {
+  margin: 0px;
+  height: 100vh;
+}
+
+.header {
+  text-align: center;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  font-size: 56px;
+  background-color: antiquewhite;
+}
+
+.container {
+  display: flex;
+}
+
+.left-menu {
+  display: flex;
+  flex-direction: column;
+  width: 25%;
+  background-color: rgb(201, 228, 228);
+  height: 100vh;
+  padding: 10px;
+}
+
+.projects {
+  font-size: 24px;
+  padding-bottom: 10px;
+}
+
+.left-menu button {
+  padding: 10px 20px;
+  margin-bottom: 10px;
+}
+
+.todo-content {
+  width: 100%;
+  padding-left: 15%;
+}
+
+.add-task {
+
+}
+
+button {
+  font-size: 16px;
+}
