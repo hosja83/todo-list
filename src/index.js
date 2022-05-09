@@ -1,5 +1,5 @@
 import { formatDistanceStrict } from 'date-fns';
-import _ from 'lodash';
+import _, { indexOf } from 'lodash';
 import './style.css';
 
 function Task(name, dueDate, priority, description) {
@@ -26,6 +26,62 @@ function Task(name, dueDate, priority, description) {
   };
 }
 
+function Project(name) {
+  this.name = name;
+  this.tasks = [];
+
+  return {
+    getName: () => {return this.name},
+    getTasks: () => {return this.tasks},
+    setName: (name) => {this.name = name},
+    addTask: (task) => {
+      //check for duplicates
+      this.tasks.forEach(t => {
+        if (task.getName() === t.getName())
+          return 'duplicate';
+      });
+      this.tasks.push(task);
+      return true;
+    },
+    removeTask: (taskName) => {
+      this.tasks.forEach(t => {
+        if (taskName === t.getName()) {
+          _.pullAt(tasks, [_.indexOf(tasks, t)])
+          return true;
+        }
+      });
+      return 'no match';
+    },
+  }
+}
+
+const projectFactory = (n) => {
+  let tasks = [];
+  return Object.freeze(Object.seal({
+    getName: () => {return n},
+    getTasks: () => {return tasks},
+    setName: (newName) => {n = newName},
+    addTask: (newTask) => {
+      tasks.forEach(t => {
+        if (t.getName() === newTask.getName())
+          return 'duplicate';
+      });
+      this.tasks.push(newTask);
+      return true;
+    },
+    removeTask: (taskName) => {
+      this.tasks.forEach(t => {
+        if (taskName === t.getName()) {
+          _.pullAt(tasks, [_.indexOf(tasks, t)])
+          return true;
+        }
+      });
+      return 'no match';
+    },
+  }));
+};
+
+
 const taskFactory = (name, dueDate, priority, description) => {
   //seal object from adding any properties except thru setters
   //freeze object from modifying any of its properties
@@ -42,6 +98,8 @@ const taskFactory = (name, dueDate, priority, description) => {
   }));
 
 };
+
+
 
 const trashDuty = new Task("Trash Duty", "May 6, 2022", "normal", "Take out the kitchen trash.");
 
