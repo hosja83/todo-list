@@ -2,44 +2,29 @@ import { formatDistanceStrict } from 'date-fns';
 import _ from 'lodash';
 import './style.css';
 
-// const Task = (name, dueDate, priority, desciption) => {
+function Task(name, dueDate, priority, description) {
   
-//   this.name = name;
-//   this.dueDate = dueDate;
-//   this.priority = priority;
-//   this.desciption = desciption;
+  this.name = name;
+  this.dueDate = dueDate;
+  this.priority = priority;
+  this.description = description;
 
-//   const getTaskInfo = () => {
-//     return `Task: ${this.name} has a ${this.priority} due on ${this.dueDate} described as: ${this.desciption}`
-//   }
+  const getTaskInfo = () => {
+    return `Task: ${this.name} has a ${this.priority} due on ${this.dueDate} described as: ${this.description}`
+  }
 
-//   return {
-//     getName: () => {return this.name},
-//     getDueDate: () => {return this.dueDate},
-//     getPriority: () => {return this.priority},
-//     getDescription: () => {return this.desciption},
-//     getTaskInfo,
-
-//     setName: (name) => {this.name = name},
-//     setDuedate: (dueDate) => {this.dueDate},
-//     setPriority: (priority) => {this.priority = priority},
-//     setDescription: () => {this.desciption = desciption},
-//   };
-// }
-
-// const takeOutTrash = new Task('Trash Duty', 'May, 6, 2022', 'normal', 'Take out the kitchen trash');
-
-// console.log(takeOutTrash.getTaskInfo());
-
-// console.log(takeOutTrash.name);
-// console.log(takeOutTrash.getName());
-
-// takeOutTrash.name = 'I dont want to take out the trash';
-// console.log(takeOutTrash.name);
-// console.log(takeOutTrash.getName());
-
-// takeOutTrash.setName('Trash Chore');
-// console.log(takeOutTrash.getName());
+  return {
+    getName: () => {return this.name},
+    getDueDate: () => {return this.dueDate},
+    getPriority: () => {return this.priority},
+    getDescription: () => {return this.description},
+    getTaskInfo,
+    setName: (name) => {this.name = name},
+    setDuedate: (dueDate) => {this.dueDate = dueDate},
+    setPriority: (priority) => {this.priority = priority},
+    setDescription: (description) => {this.description = description},
+  };
+}
 
 const taskFactory = (name, dueDate, priority, description) => {
   //seal object from adding any properties except thru setters
@@ -58,7 +43,35 @@ const taskFactory = (name, dueDate, priority, description) => {
 
 };
 
-// Testing taskFactory module
+const trashDuty = new Task("Trash Duty", "May 6, 2022", "normal", "Take out the kitchen trash.");
+
+console.log(trashDuty.getTaskInfo());
+
+console.log(trashDuty);
+console.log(trashDuty.getTaskInfo());
+
+console.log(trashDuty.name);// cannot access undefined because we did not expose/return in object
+console.log(trashDuty.priority);
+console.log(trashDuty.dueDate);
+console.log(trashDuty.description);
+
+console.log(trashDuty.getName());
+console.log(trashDuty.getPriority());
+console.log(trashDuty.getDueDate());
+console.log(trashDuty.getDescription());
+
+trashDuty.setName('Trash Chore');
+console.log(trashDuty.getName());
+
+trashDuty.setDuedate('May 5 2020');
+console.log(trashDuty.getDueDate());
+
+trashDuty.setDescription('this is the description modified');
+console.log(trashDuty.getDescription());
+
+trashDuty.setPriority('low');
+console.log(trashDuty.getPriority());
+
 const trash = taskFactory("Trash Duty", "May 6, 2022", "normal", "Take out the kitchen trash.");
 
 console.log(trash.getTaskInfo());
@@ -88,15 +101,9 @@ console.log(trash.getDescription());
 trash.setPriority('low');
 console.log(trash.getPriority());
 
-
 // User clicks add task button (requires click event listener)
-
 // window is displayed with input formatted form entries
-
 // user enters required values
-
 // user clicks complete
-
 // task is created
-
 // task is displayed in page under project heading
