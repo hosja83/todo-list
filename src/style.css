@@ -21,28 +21,41 @@ body {
   width: 25%;
   background-color: rgb(201, 228, 228);
   height: 100vh;
-  padding: 10px;
+  padding: 25px;
+  padding-top: 20px;
 }
 
 .projects {
-  font-size: 24px;
+  font-size: 28px;
   padding-bottom: 10px;
 }
 
 .left-menu button {
-  padding: 10px 20px;
-  margin-bottom: 10px;
+  
 }
 
 .todo-content {
   width: 100%;
-  padding-left: 15%;
+  padding-left: 10%;
+  padding-top: 25px;
 }
 
 .add-task {
 
 }
 
+.fa-light {
+  font-weight: 800;
+  font-family: 'icon-fonts';
+}
+
 button {
   font-size: 16px;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+}
+
+h1 {
+  font-weight: 300;
+  font-size: 28px;
 }
