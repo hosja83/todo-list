@@ -26,16 +26,35 @@ function Task(name, dueDate, priority, description) {
   };
 }
 
+const taskFactory = (name, dueDate, priority, description) => {
+  //seal object from adding any properties except thru setters
+  //freeze object from modifying any of its properties
+  return Object.freeze(Object.seal({
+    getName: () => {return name},
+    getDueDate: () => {return dueDate},
+    getPriority: () => {return priority},
+    getDescription: () => {return description},
+    getTaskInfo: () => {return `Task: ${name} has a ${priority} priority due on ${dueDate} described as: ${description}`},
+    setName: (newName) => {name = newName},
+    setDuedate: (newDueDate) => {dueDate = newDueDate},
+    setPriority: (newPriority) => {priority = newPriority},
+    setDescription: (newDescription) => {description = newDescription},
+  }));
+
+};
+
+
 function Project(name) {
   this.name = name;
-  this.tasks = [];
+  this.tasks = new Array();
 
-  return {
+  return Object.freeze(Object.seal({
     getName: () => {return this.name},
     getTasks: () => {return this.tasks},
     setName: (name) => {this.name = name},
     addTask: (task) => {
-      //check for duplicates
+      if (! task instanceof Task )
+        return 'param not instance of Task';
       this.tasks.forEach(t => {
         if (task.getName() === t.getName())
           return 'duplicate';
@@ -52,16 +71,18 @@ function Project(name) {
       });
       return 'no match';
     },
-  }
+  }));
 }
 
 const projectFactory = (n) => {
-  let tasks = [];
+  let tasks = new Array();
   return Object.freeze(Object.seal({
     getName: () => {return n},
     getTasks: () => {return tasks},
     setName: (newName) => {n = newName},
     addTask: (newTask) => {
+      if (! newTask instanceof Task )
+        return 'param not instance of Task';
       tasks.forEach(t => {
         if (t.getName() === newTask.getName())
           return 'duplicate';
@@ -82,25 +103,40 @@ const projectFactory = (n) => {
 };
 
 
-const taskFactory = (name, dueDate, priority, description) => {
-  //seal object from adding any properties except thru setters
-  //freeze object from modifying any of its properties
-  return Object.freeze(Object.seal({
-    getName: () => {return name},
-    getDueDate: () => {return dueDate},
-    getPriority: () => {return priority},
-    getDescription: () => {return description},
-    getTaskInfo: () => {return `Task: ${name} has a ${priority} priority due on ${dueDate} described as: ${description}`},
-    setName: (newName) => {name = newName},
-    setDuedate: (newDueDate) => {dueDate = newDueDate},
-    setPriority: (newPriority) => {priority = newPriority},
-    setDescription: (newDescription) => {description = newDescription},
-  }));
+//Console Log testing for Project object constructor and project factory function pattern
+const houseCleaning = new Project("House Cleaning");
+console.log(houseCleaning.getName());
+console.log(houseCleaning.getTasks());
 
-};
+const cleanDishes = new Task("Dish Cleaning", "May 15, 2022", "normal", "Clean the dishes.");
+const addHouseCleaning = houseCleaning.addTask(cleanDishes);
+
+console.log(addHouseCleaning);
+console.log(houseCleaning.getTasks());
+console.log(houseCleaning.getTasks()[0].getName());
+console.log(houseCleaning.getTasks()[0].getDueDate());
+console.log(houseCleaning.getTasks()[0].getPriority());
+console.log(houseCleaning.getTasks()[0].getDescription());
+console.log(houseCleaning.getTasks()[0].getTaskInfo());
+
+const vacumRoom = new Task("Clean Carpet", "May 16, 2022", "high", "Vacum the living room get rid of roaches.");
+const addVacumRoom = houseCleaning.addTask(vacumRoom);
+
+console.log(addVacumRoom);
+console.log(houseCleaning.getTasks());
+console.log(houseCleaning.getTasks()[1].getName());
+console.log(houseCleaning.getTasks()[1].getDueDate());
+console.log(houseCleaning.getTasks()[1].getPriority());
+console.log(houseCleaning.getTasks()[1].getDescription());
+console.log(houseCleaning.getTasks()[1].getTaskInfo());
 
 
 
+
+
+
+/*
+// Console Log testing for Task object constructor and task factory function pattern
 const trashDuty = new Task("Trash Duty", "May 6, 2022", "normal", "Take out the kitchen trash.");
 
 console.log(trashDuty.getTaskInfo());
@@ -157,7 +193,7 @@ trash.setDescription('this is the description modified');
 console.log(trash.getDescription());
 
 trash.setPriority('low');
-console.log(trash.getPriority());
+console.log(trash.getPriority());*/
 
 // User clicks add task button (requires click event listener)
 // window is displayed with input formatted form entries
