@@ -63,13 +63,15 @@ function Project(name) {
       return true;
     },
     removeTask: (taskName) => {
+      let istaskFound = false;
+      let result; 
       this.tasks.forEach(t => {
         if (taskName === t.getName()) {
-          _.pullAt(tasks, [_.indexOf(tasks, t)])
-          return true;
+          istaskFound = true;
+          result = _.pullAt(tasks, [_.indexOf(tasks, t)]); //returns array containing remove elements
         }
       });
-      return 'no match';
+      return istaskFound ? result : 'task to be removed not found';
     },
   }));
 }
@@ -87,17 +89,19 @@ const projectFactory = (n) => {
         if (t.getName() === newTask.getName())
           return 'duplicate';
       });
-      this.tasks.push(newTask);
+      tasks.push(newTask);
       return true;
     },
     removeTask: (taskName) => {
-      this.tasks.forEach(t => {
+      let istaskFound = false;
+      let result;
+      tasks.forEach(t => {
         if (taskName === t.getName()) {
-          _.pullAt(tasks, [_.indexOf(tasks, t)])
-          return true;
+          istaskFound = true;
+          result = _.pullAt(tasks, [_.indexOf(tasks, t)]); //returns array containing remove elements
         }
       });
-      return 'no match';
+      return istaskFound ? result : 'task to be removed not found';
     },
   }));
 };
@@ -131,7 +135,41 @@ console.log(houseCleaning.getTasks()[1].getDescription());
 console.log(houseCleaning.getTasks()[1].getTaskInfo());
 
 
+const houseCleaning2 = projectFactory("Clean Bathroom");
+console.log(houseCleaning2.getName());
+console.log(houseCleaning2.getTasks());
 
+const cleanBathroom = new Task("Bathroom Cleaning", "May 10, 2022", "low", "Wipe the bathroom toilet ya moron");
+const addHouseCleaning2 = houseCleaning2.addTask(cleanBathroom);
+
+console.log(addHouseCleaning2);
+console.log(houseCleaning2.getTasks());
+console.log(houseCleaning2.getTasks()[0].getName());
+console.log(houseCleaning2.getTasks()[0].getDueDate());
+console.log(houseCleaning2.getTasks()[0].getPriority());
+console.log(houseCleaning2.getTasks()[0].getDescription());
+console.log(houseCleaning2.getTasks()[0].getTaskInfo());
+
+const laundry = new Task("Laundry", "May 9, 2022", "low", "Get your laundry done ok");
+const addVacumRoom2 = houseCleaning2.addTask(laundry);
+
+console.log(addVacumRoom2);
+console.log(houseCleaning2.getTasks());
+console.log(houseCleaning2.getTasks()[1].getName());
+console.log(houseCleaning2.getTasks()[1].getDueDate());
+console.log(houseCleaning2.getTasks()[1].getPriority());
+console.log(houseCleaning2.getTasks()[1].getDescription());
+console.log(houseCleaning2.getTasks()[1].getTaskInfo());
+
+console.log(houseCleaning2.removeTask("Homework"));
+console.log(houseCleaning2.removeTask("Bathroom Cleaning")[0].getName());
+
+console.log(houseCleaning2.getTasks());
+console.log(houseCleaning2.getTasks()[0].getName());
+console.log(houseCleaning2.getTasks()[0].getDueDate());
+console.log(houseCleaning2.getTasks()[0].getPriority());
+console.log(houseCleaning2.getTasks()[0].getDescription());
+console.log(houseCleaning2.getTasks()[0].getTaskInfo());
 
 
 
@@ -165,6 +203,7 @@ console.log(trashDuty.getDescription());
 
 trashDuty.setPriority('low');
 console.log(trashDuty.getPriority());
+
 
 const trash = taskFactory("Trash Duty", "May 6, 2022", "normal", "Take out the kitchen trash.");
 
