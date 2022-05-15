@@ -30,8 +30,22 @@ body {
   padding-bottom: 10px;
 }
 
-.left-menu button {
-  
+#on-add-project {
+  display: none;
+}
+
+.check-cancel-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+}
+
+#create-on-add-project {
+  background-color: #a5eea5;
+}
+
+#cancel-on-add-project {
+  background-color: #ffb6b6;
 }
 
 .todo-content {
@@ -40,16 +54,7 @@ body {
   padding-top: 25px;
 }
 
-.add-task {
-
-}
-
-.fa-light {
-  font-weight: 800;
-  font-family: 'icon-fonts';
-}
-
-button {
+button, input {
   font-size: 16px;
   padding: 10px 20px;
   margin-bottom: 10px;
@@ -58,4 +63,16 @@ button {
 h1 {
   font-weight: 300;
   font-size: 28px;
+}
+
+#add-project {
+}
+
+.left-menu button {
+}
+
+#on-add-project input {
+}
+
+.add-task {
 }

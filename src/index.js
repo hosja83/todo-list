@@ -240,3 +240,51 @@ console.log(trash.getPriority());*/
 // user clicks complete
 // task is created
 // task is displayed in page under project heading
+
+
+
+activateAddProjectListener();
+
+function activateCancelProjectListener() {
+  document.getElementById("cancel-on-add-project").addEventListener('click', cancelOnAddProject);
+}
+function cancelOnAddProject() {
+  document.getElementById("on-add-project").style.display = "none";
+
+  const leftMenu = document.querySelector(".left-menu").appendChild(document.createElement('button'));
+  leftMenu.setAttribute('id', "add-project");
+  leftMenu.textContent = "Add Project";
+
+  activateAddProjectListener();
+}
+
+function activateCreateProjectListener() {
+  document.getElementById("create-on-add-project").addEventListener('click', );
+}
+function createProject() {
+  document.getElementById
+}
+
+
+function activateAddProjectListener() {
+  document.getElementById("add-project").addEventListener('click', addProject);
+}
+function addProject() {
+  // Add Project button disappears temporarily
+  const addProjectElement = removeElement(document.getElementById("add-project"));
+  // Input text field appears, with text input used to create project with a new name and empty tasks list
+  document.getElementById("on-add-project").style.display = "block";
+  // If user clicks 'X'/cancel then project does not get created nothing changes
+  activateCancelProjectListener();
+
+  // If user clicks add/create/'check' then project gets added under project menu
+
+  // Add Project button gets restored under the updated Projects list in left hand side menu
+
+
+
+}
+
+function removeElement(element) {
+  return element.parentNode.removeChild(element);
+}
