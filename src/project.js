@@ -1,4 +1,5 @@
 function Project(name) {
+  
   this.name = name;
   this.tasks = new Array();
 
