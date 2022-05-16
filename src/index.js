@@ -106,7 +106,7 @@ const projectFactory = (n) => {
   }));
 };
 
-
+/*
 //Console Log testing for Project object constructor and project factory function pattern
 const houseCleaning = new Project("House Cleaning");
 console.log(houseCleaning.getName());
@@ -173,7 +173,7 @@ console.log(houseCleaning2.getTasks()[0].getTaskInfo());
 
 
 
-/*
+
 // Console Log testing for Task object constructor and task factory function pattern
 const trashDuty = new Task("Trash Duty", "May 6, 2022", "normal", "Take out the kitchen trash.");
 
@@ -241,14 +241,53 @@ console.log(trash.getPriority());*/
 // task is created
 // task is displayed in page under project heading
 
+/**
+ * Creates new elements with given tag names and appends parent element to child element.
+ * Returns parent element with appended child.
+ * 
+ * @param {string} parentElementTagName tag name of parent element
+ * @param {string} childElementTagName tag name of child element
+ * @return {HTMLElement} returns parent element with appended child
+ */
+ function appendChildToParent(parentElementTagName, childElementTagName) {
+  const parent = document.createElement(parentElementTagName);
+  const child = document.createElement(childElementTagName);
+  parent.appendChild(child);
+  return parent;
+}
+
+/**
+ * Returns removed given element
+ * 
+ * @param {HTMLElement} element element to be removed
+ * @returns {HTMLElement} removed element
+ */
+function removeElement(element) {
+  return element.parentNode.removeChild(element);
+}
 
 
 activateAddProjectListener();
 
-function activateCancelProjectListener() {
-  document.getElementById("cancel-on-add-project").addEventListener('click', cancelOnAddProject);
+function activateAddProjectListener() {document.getElementById("add-project").addEventListener('click', addProject)}
+
+function addProject() {
+  // Add Project button disappears temporarily
+  const addProjectElement = removeElement(document.getElementById("add-project"));
+  // Input text field appears, with text input used to create project with a new name and empty tasks list
+  document.getElementById("on-add-project").style.display = "block";
+  // If user clicks 'X'/cancel then project does not get created nothing changes
+  activateCancelProjectListener();
+  // If user clicks add/create/'check' then project gets added under project menu
+  activateCreateProjectListener();
 }
+
+function activateCancelProjectListener() {document.getElementById("cancel-on-add-project").addEventListener('click', cancelOnAddProject)}
+
 function cancelOnAddProject() {
+  const input = document.getElementById("create-project");
+  input.value = "";
+
   document.getElementById("on-add-project").style.display = "none";
 
   const leftMenu = document.querySelector(".left-menu").appendChild(document.createElement('button'));
@@ -258,33 +297,23 @@ function cancelOnAddProject() {
   activateAddProjectListener();
 }
 
-function activateCreateProjectListener() {
-  document.getElementById("create-on-add-project").addEventListener('click', );
-}
+function activateCreateProjectListener() {document.getElementById("create-on-add-project").addEventListener('click', createProject)}
+
 function createProject() {
-  document.getElementById
+  const input = document.getElementById("create-project");
+  
+  if (input.value === "") {
+    alert("Project name cannot be blank");
+    return false;
+  }
+
+  const projectName = input.value;
+  const project = new Project(projectName);
+
+  cancelOnAddProject();
+
+  const projectElement = appendChildToParent('li', 'button');
+  projectElement.firstChild.textContent = project.getName();
+  document.getElementById("project-list").append(projectElement);
 }
 
-
-function activateAddProjectListener() {
-  document.getElementById("add-project").addEventListener('click', addProject);
-}
-function addProject() {
-  // Add Project button disappears temporarily
-  const addProjectElement = removeElement(document.getElementById("add-project"));
-  // Input text field appears, with text input used to create project with a new name and empty tasks list
-  document.getElementById("on-add-project").style.display = "block";
-  // If user clicks 'X'/cancel then project does not get created nothing changes
-  activateCancelProjectListener();
-
-  // If user clicks add/create/'check' then project gets added under project menu
-
-  // Add Project button gets restored under the updated Projects list in left hand side menu
-
-
-
-}
-
-function removeElement(element) {
-  return element.parentNode.removeChild(element);
-}
