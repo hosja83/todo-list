@@ -7,17 +7,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/703f595fbc.js" crossorigin="anonymous"></script>
     <title>Todo List</title>
-  <script defer src="./runtime.bundle.js?4cd7babb1f65b6096eda"></script><script defer src="./index.bundle.js?4cd7babb1f65b6096eda"></script></head>
+  <script defer src="./runtime.bundle.js?8522e5a107794b98b299"></script><script defer src="./index.bundle.js?8522e5a107794b98b299"></script></head>
 
   <body>
     <div class="header">Todo List</div>
     <div class="container">
       <div class="left-menu">
         <div class="projects">Projects</div>
-        <button class="general">General</button>
+        <ul id="project-list">
+          <li><button class="general">General</button></li>
+        </ul>
         <button id="add-project">Add Project</button>
         <div id="on-add-project">
-          <input type="text" on>
+          <input id="create-project" type="text">
           <div class="check-cancel-container">
             <button id="create-on-add-project">create</button>
             <button id="cancel-on-add-project">cancel</button>
