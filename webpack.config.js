@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { dirname } = require('path');
 
 module.exports = {
   mode: 'development',
@@ -25,11 +26,14 @@ module.exports = {
     rules: [
       {
         test: /\.css$/i,
+        include: path.resolve(__dirname, 'src'),
         use: ['style-loader', 'css-loader'],
       },
       {
-        
-      }
+        test: /\.s[ac]ss$/i,
+        include: path.resolve(__dirname, 'src'),
+        use: ['style-loader', 'css-loader', 'sass-loader'],
+      },
     ],
   },
   devtool: 'inline-source-map',
