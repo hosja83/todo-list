@@ -1,0 +1,101 @@
+function Task(name, dueDate, priority, description) {
+  
+  this.name = name;
+  this.dueDate = dueDate;
+  this.priority = priority;
+  this.description = description;
+
+  const getTaskInfo = () => {
+    return `Task: ${this.name} has a ${this.priority} due on ${this.dueDate} described as: ${this.description}`
+  }
+
+  return {
+    getName: () => {return this.name},
+    getDueDate: () => {return this.dueDate},
+    getPriority: () => {return this.priority},
+    getDescription: () => {return this.description},
+    getTaskInfo,
+    setName: (name) => {this.name = name},
+    setDuedate: (dueDate) => {this.dueDate = dueDate},
+    setPriority: (priority) => {this.priority = priority},
+    setDescription: (description) => {this.description = description},
+  };
+}
+
+const taskFactory = (name, dueDate, priority, description) => {
+  //seal object from adding any properties except thru setters
+  //freeze object from modifying any of its properties
+  return Object.freeze(Object.seal({
+    getName: () => {return name},
+    getDueDate: () => {return dueDate},
+    getPriority: () => {return priority},
+    getDescription: () => {return description},
+    getTaskInfo: () => {return `Task: ${name} has a ${priority} priority due on ${dueDate} described as: ${description}`},
+    setName: (newName) => {name = newName},
+    setDuedate: (newDueDate) => {dueDate = newDueDate},
+    setPriority: (newPriority) => {priority = newPriority},
+    setDescription: (newDescription) => {description = newDescription},
+  }));
+
+};
+
+/*
+// Console Log testing for Task object constructor and task factory function pattern
+const trashDuty = new Task("Trash Duty", "May 6, 2022", "normal", "Take out the kitchen trash.");
+
+console.log(trashDuty.getTaskInfo());
+
+console.log(trashDuty);
+console.log(trashDuty.getTaskInfo());
+
+console.log(trashDuty.name);// cannot access undefined because we did not expose/return in object
+console.log(trashDuty.priority);
+console.log(trashDuty.dueDate);
+console.log(trashDuty.description);
+
+console.log(trashDuty.getName());
+console.log(trashDuty.getPriority());
+console.log(trashDuty.getDueDate());
+console.log(trashDuty.getDescription());
+
+trashDuty.setName('Trash Chore');
+console.log(trashDuty.getName());
+
+trashDuty.setDuedate('May 5 2020');
+console.log(trashDuty.getDueDate());
+
+trashDuty.setDescription('this is the description modified');
+console.log(trashDuty.getDescription());
+
+trashDuty.setPriority('low');
+console.log(trashDuty.getPriority());
+
+
+const trash = taskFactory("Trash Duty", "May 6, 2022", "normal", "Take out the kitchen trash.");
+
+console.log(trash.getTaskInfo());
+
+console.log(trash);
+console.log(trash.getTaskInfo());
+
+console.log(trash.name);// cannot access undefined because we did not expose/return in object
+console.log(trash.priority);
+console.log(trash.dueDate);
+console.log(trash.description);
+
+console.log(trash.getName());
+console.log(trash.getPriority());
+console.log(trash.getDueDate());
+console.log(trash.getDescription());
+
+trash.setName('Trash Chore');
+console.log(trash.getName());
+
+trash.setDuedate('May 5 2020');
+console.log(trash.getDueDate());
+
+trash.setDescription('this is the description modified');
+console.log(trash.getDescription());
+
+trash.setPriority('low');
+console.log(trash.getPriority());*/
