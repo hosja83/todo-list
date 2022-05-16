@@ -1,7 +1,7 @@
 import { formatDistanceStrict } from 'date-fns';
 import './style.sass';
 import Project, {projectFactory as projectfactory} from './project';
-import Task, {taskFactory} from './task';
+import Task, {taskfactory} from './task';
 
 
 // User clicks add task button (requires click event listener)
@@ -11,7 +11,7 @@ import Task, {taskFactory} from './task';
 // task is created
 // task is displayed in page under project heading
 
-activateAddProjectListener();
+onAddProjectEventListener();
 
 /**
  * Creates new elements with given tag names and appends parent element to child element.
@@ -38,9 +38,9 @@ function removeElement(element) {
   return element.parentNode.removeChild(element);
 }
 
-function activateAddProjectListener() {document.getElementById("add-project").addEventListener('click', addProject)}
+function onAddProjectEventListener() {document.getElementById("add-project").addEventListener('click', initiateAddProjectEvent)}
 
-function addProject() {
+function initiateAddProjectEvent() {
   // Add Project button disappears temporarily
   const addProjectElement = removeElement(document.getElementById("add-project"));
   // Input text field appears, with text input used to create project with a new name and empty tasks list
@@ -63,7 +63,7 @@ function cancelOnAddProject() {
   leftMenu.setAttribute('id', "add-project");
   leftMenu.textContent = "Add Project";
 
-  activateAddProjectListener();
+  onAddProjectEventListener();
 }
 
 function activateCreateProjectListener() {document.getElementById("create-on-add-project").addEventListener('click', createProject)}
