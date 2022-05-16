@@ -1,6 +1,6 @@
 import { formatDistanceStrict } from 'date-fns';
 import _, { indexOf } from 'lodash';
-import './style.css';
+import './style.sass';
 import './task.js';
 import './project.js';
 
@@ -10,6 +10,8 @@ import './project.js';
 // user clicks complete
 // task is created
 // task is displayed in page under project heading
+
+activateAddProjectListener();
 
 /**
  * Creates new elements with given tag names and appends parent element to child element.
@@ -35,9 +37,6 @@ import './project.js';
 function removeElement(element) {
   return element.parentNode.removeChild(element);
 }
-
-
-activateAddProjectListener();
 
 function activateAddProjectListener() {document.getElementById("add-project").addEventListener('click', addProject)}
 
