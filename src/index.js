@@ -1,8 +1,8 @@
 import { formatDistanceStrict } from 'date-fns';
-import _, { indexOf } from 'lodash';
 import './style.sass';
-import './task.js';
-import './project.js';
+import Project, {projectFactory as projectfactory} from './project';
+import Task, {taskFactory} from './task';
+
 
 // User clicks add task button (requires click event listener)
 // window is displayed with input formatted form entries

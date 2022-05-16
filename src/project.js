@@ -1,4 +1,6 @@
-function Project(name) {
+import {_indexOf, _pullAt} from 'lodash';
+
+export default function Project(name) {
 
   this.name = name;
   this.tasks = new Array();
@@ -31,7 +33,7 @@ function Project(name) {
   }));
 }
 
-const projectFactory = (n) => {
+export const projectFactory = (n) => {
   let tasks = new Array();
   return Object.freeze(Object.seal({
     getName: () => {return n},
@@ -59,8 +61,4 @@ const projectFactory = (n) => {
       return istaskFound ? result : 'task to be removed not found';
     },
   }));
-};
-
-module.exports = {
-  Project, projectFactory
 };

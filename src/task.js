@@ -1,3 +1,5 @@
+import {_indexOf, _pullAt} from 'lodash';
+
 function Task(name, dueDate, priority, description) {
   
   this.name = name;
@@ -39,6 +41,4 @@ const taskFactory = (name, dueDate, priority, description) => {
 
 };
 
-module.exports = {
-  Task, taskFactory
-};
+export {Task as default, taskFactory as taskfactory};
