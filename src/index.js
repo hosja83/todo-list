@@ -2,26 +2,12 @@ import { formatDistanceStrict } from 'date-fns';
 import './style.sass';
 import Project, {projectFactory as projectfactory} from './project';
 import Task, {taskfactory} from './task';
+import * as DOMUtil from './dom-util';
 
 onAddProjectEventListener();
 
 //listens for clicks on general button; displays general project tasks on fire
 generalProjectEventListener(); 
-
-/**
- * Creates new elements with given tag names and appends parent element to child element.
- * Returns parent element with appended child.
- * 
- * @param {string} parentElementTagName tag name of parent element
- * @param {string} childElementTagName tag name of child element
- * @return {HTMLElement} returns parent element with appended child
- */
- function appendChildToParent(parentElementTagName, childElementTagName) {
-  const parent = document.createElement(parentElementTagName);
-  const child = document.createElement(childElementTagName);
-  parent.appendChild(child);
-  return parent;
-} 
 
 /**
  * Returns removed given element
@@ -74,7 +60,7 @@ function addProject() {
 
   cancelOnAddProject();
 
-  const projectElement = appendChildToParent('li', 'button');
+  const projectElement = DOMUtil.appendChildToParent('li', 'button');
   projectElement.firstChild.textContent = project.getName();
   document.getElementById("project-list").append(projectElement);
 
