@@ -3,27 +3,18 @@ import './style.sass';
 import Project, {projectFactory as projectfactory} from './project';
 import Task, {taskfactory} from './task';
 import * as DOMUtil from './dom-util';
+import ProjectList from './project-list';
 
 onAddProjectEventListener();
 
 //listens for clicks on general button; displays general project tasks on fire
 generalProjectEventListener(); 
 
-/**
- * Returns removed given element
- * 
- * @param {HTMLElement} element element to be removed
- * @returns {HTMLElement} removed element
- */
-function removeElement(element) {
-  return element.parentNode.removeChild(element);
-}
-
 function onAddProjectEventListener() {document.getElementById("add-project").addEventListener('click', initiateAddProjectEvent)}
 
 function initiateAddProjectEvent() {
   // Add Project button disappears temporarily, Input text field appears
-  const addProjectElement = removeElement(document.getElementById("add-project"));
+  const addProjectElement = DOMUtil.removeElement(document.getElementById("add-project"));
   document.getElementById("on-add-project").style.display = "block";
 
   cancelProjectEventListener();
@@ -73,13 +64,10 @@ function addProject() {
 // or some type of server that saves and retrieves information only when I need it
 
 
-
 // User clicks add task button (requires click event listener)
 // window is displayed with input formatted form entries
 // user enters required values
 // user clicks complete
 // task is created
 // task is displayed in page under project heading
-
-
 
