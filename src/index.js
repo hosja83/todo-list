@@ -3,15 +3,10 @@ import './style.sass';
 import Project, {projectFactory as projectfactory} from './project';
 import Task, {taskfactory} from './task';
 
-
-// User clicks add task button (requires click event listener)
-// window is displayed with input formatted form entries
-// user enters required values
-// user clicks complete
-// task is created
-// task is displayed in page under project heading
-
 onAddProjectEventListener();
+
+//listens for clicks on general button; displays general project tasks on fire
+generalProjectEventListener(); 
 
 /**
  * Creates new elements with given tag names and appends parent element to child element.
@@ -26,7 +21,7 @@ onAddProjectEventListener();
   const child = document.createElement(childElementTagName);
   parent.appendChild(child);
   return parent;
-}
+} 
 
 /**
  * Returns removed given element
@@ -41,17 +36,15 @@ function removeElement(element) {
 function onAddProjectEventListener() {document.getElementById("add-project").addEventListener('click', initiateAddProjectEvent)}
 
 function initiateAddProjectEvent() {
-  // Add Project button disappears temporarily
+  // Add Project button disappears temporarily, Input text field appears
   const addProjectElement = removeElement(document.getElementById("add-project"));
-  // Input text field appears, with text input used to create project with a new name and empty tasks list
   document.getElementById("on-add-project").style.display = "block";
-  // If user clicks 'X'/cancel then project does not get created nothing changes
-  activateCancelProjectListener();
-  // If user clicks add/create/'check' then project gets added under project menu
-  activateCreateProjectListener();
+
+  cancelProjectEventListener();
+  createProjectEventListener();
 }
 
-function activateCancelProjectListener() {document.getElementById("cancel-on-add-project").addEventListener('click', cancelOnAddProject)}
+function cancelProjectEventListener() {document.getElementById("cancel-on-add-project").addEventListener('click', cancelOnAddProject)}
 
 function cancelOnAddProject() {
   const input = document.getElementById("create-project");
@@ -66,9 +59,9 @@ function cancelOnAddProject() {
   onAddProjectEventListener();
 }
 
-function activateCreateProjectListener() {document.getElementById("create-on-add-project").addEventListener('click', createProject)}
+function createProjectEventListener() {document.getElementById("create-on-add-project").addEventListener('click', addProject)}
 
-function createProject() {
+function addProject() {
   const input = document.getElementById("create-project");
   
   if (input.value === "") {
@@ -84,5 +77,23 @@ function createProject() {
   const projectElement = appendChildToParent('li', 'button');
   projectElement.firstChild.textContent = project.getName();
   document.getElementById("project-list").append(projectElement);
+
+  //Everytime a new Project is created, add a click event listener for that project button
+  //to display tasks when clicked 
+
 }
+
+// I need a place where I can store projects data and retrieve when I need it like a database
+// or some type of server that saves and retrieves information only when I need it
+
+
+
+// User clicks add task button (requires click event listener)
+// window is displayed with input formatted form entries
+// user enters required values
+// user clicks complete
+// task is created
+// task is displayed in page under project heading
+
+
 
