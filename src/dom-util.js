@@ -11,4 +11,14 @@ export function appendChildToParent(parentElementTagName, childElementTagName) {
   const child = document.createElement(childElementTagName);
   parent.appendChild(child);
   return parent;
-} 
+}
+
+/**
+ * Returns removed given element
+ * 
+ * @param {HTMLElement} element element to be removed
+ * @returns {HTMLElement} removed element
+ */
+ export function removeElement(element) {
+  return element.parentNode.removeChild(element);
+}
