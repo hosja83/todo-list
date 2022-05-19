@@ -1,5 +1,6 @@
 import { filter } from "lodash";
 import { removeOnce } from "./array-util";
+import Project, { projectFactory } from "./project";
 
 export default class ProjectList {
 
@@ -18,6 +19,10 @@ export default class ProjectList {
   addProject(project) {
     //Check for duplicates, report error to user by alerting user of duplicate project
     //Lodash filter method
+    if (!(typeof(project) === Project || typeof(project) === projectFactory)) {
+      return "Invalid input, must be of type project";
+    }
+
     const filtered = filter(this.projects, p => p.getName() === project.getName());
 
     //Standard library filter method
@@ -31,7 +36,11 @@ export default class ProjectList {
     this.projects.push(project);
   }
 
-  removeProject(project) {return removeOnce(this.projects, (p) => p.getName() === project.getName());}
+  removeProject(project) { 
+    if (!(typeof(project) === Project || typeof(project) === projectFactory)) {
+      return "Invalid input, must be of type project";
+    }
 
+    return removeOnce(this.projects, (p) => p.getName() === project.getName()); 
+  }
 }
-
