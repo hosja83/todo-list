@@ -16,16 +16,21 @@
         <div class="projects">Projects</div>
         <ul id="project-list">
           <li>
-            <button class="general">General</button>
+            <button class="general">
+              General
+              <span class="delete-project" onclick="deleteProject(event)">X</span>
+            </button>
           </li>
         </ul>
-        <button id="add-project">Add Project</button>
+        <button id="add-project-button">Add Project</button>
         <div id="on-add-project">
-          <input id="create-project" type="text">
-          <div class="check-cancel-container">
-            <button id="create-on-add-project">create</button>
-            <button id="cancel-on-add-project">cancel</button>
-          </div>
+          <form onsubmit="return false">
+            <input id="create-project" type="text">
+            <div class="check-cancel-container">
+              <button type="submit" id="create-on-add-project">create</button>
+              <button id="cancel-on-add-project">cancel</button>
+            </div>
+          </form>
         </div>
       </div>
     <div class="todo-content">
