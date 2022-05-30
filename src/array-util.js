@@ -6,7 +6,12 @@
  * @param {callback} callbackFn function to execute on each value in array until function returns true or reaches end of array 
  * @returns {Array} an array containing deleted elements, empty array if no elements are removed
  */
-export function removeOnce(arr, callbackFn) {
+export function removeFirst(arr, callbackFn) {
   const index = arr.findIndex(callbackFn);
   return arr.splice(index, 1);
+}
+
+export function findFirst(arr, callbackFn) {
+  const index = arr.findIndex(callbackFn);
+  return arr.slice(index, 1);
 }
