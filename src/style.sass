@@ -1,5 +1,9 @@
-body 
-  margin: 0px
+*, *::before, *::after
+  box-sizing: border-box
+  margin: 0
+  padding: 0
+
+body
   height: 100vh
 
 .header
@@ -25,6 +29,16 @@ body
   font-size: 28px
   padding-bottom: 10px
 
+.delete-project
+  float: right
+  border: 1px black solid
+  width: 20px
+  height: 20px
+  text-align: center
+  
+.delete-project:hover
+  color: red
+
 #on-add-project
   display: none
 
@@ -38,6 +52,9 @@ body
 
 #cancel-on-add-project
   background-color: #ffb6b6
+
+#create-project
+  width: 83%
 
 .todo-content
   width: 100%
@@ -58,11 +75,14 @@ h1
 
 ul
   list-style: circle
+  padding: 0
+  margin: 0
 
 .add-task
   width: 140px
+  
+#add-project-button
 
-#add-project
 
 .left-menu button
 
