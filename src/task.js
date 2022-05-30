@@ -1,5 +1,15 @@
-import {_indexOf, _pullAt} from 'lodash';
+//task.js
 
+/**
+ * Returns a Task object created with the given task, duedate, priority, and description. 
+ * Object consists of methods to get and set it's fields.
+ * 
+ * @param {String} name name of the task
+ * @param {Date} dueDate due date for this task
+ * @param {String} priority low, normal, or high priority
+ * @param {String} description description of the task
+ * @returns Task object with methods to access and set it's fields
+ */
 function Task(name, dueDate, priority, description) {
   
   this.name = name;
@@ -24,6 +34,16 @@ function Task(name, dueDate, priority, description) {
   };
 }
 
+/**
+ * Returns a Task object created with the given task, duedate, priority, and description. 
+ * Object consists of methods to get and set it's fields.
+ * 
+ * @param {String} name name of the task
+ * @param {Date} dueDate due date for this task
+ * @param {String} priority low, normal, or high priority
+ * @param {String} description description of the task
+ * @returns Task object with methods to access and set it's fields
+ */
 const taskFactory = (name, dueDate, priority, description) => {
   //seal object from adding any properties except thru setters
   //freeze object from modifying any of its properties
