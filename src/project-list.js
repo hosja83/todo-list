@@ -1,46 +1,54 @@
-import { filter } from "lodash";
-import { removeOnce } from "./array-util";
-import Project, { projectFactory } from "./project";
+// project-list.js
 
+import { filter } from "lodash";
+import { removeFirst, findFirst } from "./array-util";
+
+/**
+ * Constructs a class that adds, deletes, and retrieves Projects from an array of Projects.
+ */
 export default class ProjectList {
 
   constructor() {
     this.projects = [];
   }
 
+  getProject(projectName) {
+    return findFirst(this.projects, (p) => p.getName() === projectName.getName());
+  }
+
   getProjects() {
     return this.projects;
   }
 
-  setProjects(newProjects) {
-    this.projects = newProjects;
+  setProjects(projects) {
+    this.projects = projects;
   }
 
   addProject(project) {
-    //Check for duplicates, report error to user by alerting user of duplicate project
-    //Lodash filter method
-    if (!(typeof(project) === Project || typeof(project) === projectFactory)) {
-      return "Invalid input, must be of type project";
-    }
+    // Check if given project is instance of Project
+    // if (!(project instanceof Project || project instanceof projectFactory)) {
+    //   return "Invalid input, must be of type project";
+    // }
 
+    // Check if given project is duplicate, using Lodash filter method
     const filtered = filter(this.projects, p => p.getName() === project.getName());
-
     //Standard library filter method
     const filteredProjects = this.projects.filter(p => p.getName() === project.getName());
 
     if (!(filtered.length === 0 && filteredProjects.length === 0)) {
-      alert("Cannot Enter Duplicate Project");
-      return;
+      alert("Duplicate project error, please try again.");
+      return "Duplicate";
     }
 
     this.projects.push(project);
+    return project;
   }
 
-  removeProject(project) { 
-    if (!(typeof(project) === Project || typeof(project) === projectFactory)) {
-      return "Invalid input, must be of type project";
-    }
+  removeProject(projectName) { 
+    // if (!(typeof(project) === Project || typeof(project) === projectFactory)) {
+    //   return "Invalid input, must be of type project";
+    // }
 
-    return removeOnce(this.projects, (p) => p.getName() === project.getName()); 
+    return removeFirst(this.projects, (p) => p.getName() === projectName); 
   }
 }
