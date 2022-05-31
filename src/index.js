@@ -4,6 +4,7 @@ import Project, {projectFactory as projectfactory} from './project';
 import Task, {taskfactory} from './task';
 import * as DOMUtil from './dom-util';
 import ProjectList from './project-list';
+import * as LocalStorage from './local-storage';
 
 // I need a place where I can store projects data and retrieve when I need it like a database
 // or some type of server that saves and retrieves information only when I need it
@@ -21,6 +22,14 @@ const elements = {
   createButton: document.getElementById("create-on-add-project"),
   taskList: document.getElementById('task-list'),
 }
+
+//First thing after page loads
+//We must load all projects from localStorage
+//populate our DOM with these lists of projects
+//add event listeners to all these projects including general to display their tasks,
+//Each project tasks must be retrieved from localStorage if user clicks on project and, 
+//these tasks should be displayed along with the project header
+//default display should always show General project when user refreshes or after browser closes
 
 const todoListProjects = initProjectList();
 initTodoListUI();
@@ -82,6 +91,9 @@ function initTodoListUI() {
   const general = projectfactory("General");
   projects.addProject(general);
 
+  //...Before storing in localStorage convert Project/Task objects into String objects
+
+  //Init the X cancel span element with a click event listener that deletes general project
   const generalDelete = document.querySelector(".delete-project");
   generalDelete.setAttribute('onclick', 'deleteProject()');
   generalDelete.onclick = deleteProject;
