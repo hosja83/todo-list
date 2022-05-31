@@ -20,8 +20,9 @@ export default function Project(name) {
     getTasks: () => {return this.tasks},
     setName: (name) => {this.name = name},
     addTask: (task) => {
-      if (! (task instanceof Task) )
-        return 'param not instance of Task';
+      // This check doesn't work
+      // if (! (newTask instanceof Task) )
+      //   return 'param not instance of Task';
       this.tasks.forEach(t => {
         if (task.getName() === t.getName())
           return 'duplicate';
@@ -57,8 +58,9 @@ export const projectFactory = (n) => {
     getTasks: () => {return tasks},
     setName: (newName) => {n = newName},
     addTask: (newTask) => {
-      if (! (newTask instanceof Task) )
-        return 'param not instance of Task';
+      // This check doesn't work
+      // if (! (newTask instanceof Task) )
+      //   return 'param not instance of Task';
       tasks.forEach(t => {
         if (t.getName() === newTask.getName())
           return 'duplicate';
