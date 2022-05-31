@@ -12,3 +12,13 @@ export function appendChildToParent(parentElementTagName, childElementTagName) {
   parent.appendChild(child);
   return parent;
 }
+
+/**
+ * Removes all the child nodes of the given parent node.
+ * 
+ * @param {Node} parent parent Node that needs all children removed
+ */
+export function removeAllChildNodes(parent) {
+  while (parent.hasChildNodes()) 
+    parent.removeChild(parent.firstChild);
+}
