@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/703f595fbc.js" crossorigin="anonymous"></script>
     <title>Todo List</title>
-  <script defer src="./runtime.bundle.js?4d7add98a5602b58dbcb"></script><script defer src="./index.bundle.js?4d7add98a5602b58dbcb"></script></head>
+  <script defer src="./runtime.bundle.js?a47ac4435bd2a28c800b"></script><script defer src="./index.bundle.js?a47ac4435bd2a28c800b"></script></head>
 
   <body>
     <div class="header">Todo List</div>
@@ -16,10 +16,7 @@
         <div class="projects">Projects</div>
         <ul id="project-list">
           <li>
-            <button class="general">
-              General
-              <span class="delete-project" onclick="deleteProject(event)">X</span>
-            </button>
+            <button class="general">General<span class="delete-project" onclick="deleteProject(event)">X</span></button>
           </li>
         </ul>
         <button id="add-project-button">Add Project</button>
@@ -34,7 +31,9 @@
         </div>
       </div>
     <div class="todo-content">
-      <h1>General</h1>
+      <h1 id="task-list-header">General</h1>
+      <ul id="task-list">
+      </ul>
       <button class="add-task">Add Task</button>
     </div>
   </body>
