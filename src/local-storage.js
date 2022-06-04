@@ -23,6 +23,31 @@
   localStorage.setItem('ProjectListAsString', JSON.stringify(projectListAsString));
   JSON.parse(localStorage.getItem('ProjectListAsString'));
 
+  //Examples: How projectList with General empty tasks initialized looks like in localStorage
+  '{
+    "projectListAsStringObjects":
+      [
+        {
+          "name":"General",
+          "tasksAsStringObjects":[]
+        }
+      ]
+  }'
+
+  '{
+    "projectListAsStringObjects":
+      [
+        {
+          "name":"General",
+          "tasksAsStringObjects":[]
+        },
+        {
+          "name":"Hello",
+          "tasksAsStringObjects":[]
+        }
+      ]
+  }'
+
   //IMPORTANT TO NOTE: LOCAL STORAGE ONLY STORES STRINGS SO YOU MUST STRINGIFY YOUR OBJECTS
   //USING JSON.stringify AND YOU MUST PARSE YOUR OBJECTS BEING STORED AND RETRIEVED BACK
   //TO THEIR APPROPRIATE STATES. SO IF YOU ARE STORING OBJECTS YOU MUST PREPARE THEM TO BE 
@@ -34,6 +59,7 @@ import Task from './task';
 import parse from 'date-fns/parse';
 import {projectFactory} from './project.js';
 import ProjectList from './project-list';
+import UserException from './exception';
 
 export function convertTaskToStringObject(task) {
   const taskAsString = {
@@ -56,7 +82,7 @@ export function convertStringObjectToTask(taskStringObject) {
 }
 
 export function convertProjectToStringObject(project) {
-  const tasksAsStringObjects = project.getTasks().map(t => convertTaskToStringObjectNotation(t));
+  const tasksAsStringObjects = project.getTasks().map(t => convertTaskToStringObject(t));
 
   const projectAsString = {
     name: project.getName(),
@@ -72,11 +98,11 @@ export function convertStringObjectToProject(projectStringObject) {
     projectStringObjectAsProject.addTask(convertStringObjectToTask(t));
   });
 
-  return projectStringObjectAsProjectl
+  return projectStringObjectAsProject;
 }
 
 export function convertProjectListToStringObject(projectList) {
-  const projectListAsStringObjects = projectList.map(p => convertProjectToStringObjectNotation(p));
+  const projectListAsStringObjects = projectList.getProjects().map(p => convertProjectToStringObject(p));
   
   const projectListAsString = {
     projectListAsStringObjects
@@ -85,6 +111,12 @@ export function convertProjectListToStringObject(projectList) {
 }
 
 export function convertStringObjectToProjectList(projectListStringObject) {
+  if (projectListStringObject === undefined || 
+      projectListStringObject === null || 
+      projectListStringObject === 'null') {
+    throw new UserException('ProjectListNull');
+  }
+
   const projectListStringObjectAsProjectList = new ProjectList();
 
   projectListStringObject.projectListAsStringObjects.forEach(p => {
