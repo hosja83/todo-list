@@ -1,7 +1,6 @@
 // project.js
 
 import {_indexOf, _pullAt} from 'lodash';
-import Task from './task';
 
 /**
  * Returns a Project object created with the given name and an empty list of Task objects. 
