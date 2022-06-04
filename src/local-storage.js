@@ -22,10 +22,15 @@
   //Examples: Using JSON.stringify and parse to save into and load from local storage correctly
   localStorage.setItem('ProjectListAsString', JSON.stringify(projectListAsString));
   JSON.parse(localStorage.getItem('ProjectListAsString'));
-  */
+*/
 
-export function convertTaskToStringObjectNotation(task) {
-  let taskAsString = {
+import Task from './task';
+import parse from 'date-fns/parse';
+import {projectFactory} from './project.js';
+import ProjectList from './project-list';
+
+export function convertTaskToStringObject(task) {
+  const taskAsString = {
     name: task.getName(),
     dueDate: task.getDueDate(), //type of value in dueDate depends on how input is received
     priority: task.getPriority(),
@@ -34,21 +39,51 @@ export function convertTaskToStringObjectNotation(task) {
   return taskAsString;
 }
 
-export function convertProjectToStringObjectNotation(project) {
+export function convertStringObjectToTask(taskStringObject) {
+  const taskStringObjectAsTask = new Task(taskStringObject.name,
+    //type of date input received from user is going to determine if we need to parse or
+    //how we need to parse 
+                                        parse(taskStringObject.duedate), 
+                                        taskStringObject.priority,
+                                        taskStringObject.description);
+  return taskStringObjectAsTask;
+}
+
+export function convertProjectToStringObject(project) {
   const tasksAsStringObjects = project.getTasks().map(t => convertTaskToStringObjectNotation(t));
 
-  let projectAsString = {
+  const projectAsString = {
     name: project.getName(),
     tasksAsStringObjects
   };
   return projectAsString;
 }
 
-export function converProjectListToStringObjectNotation(projectList) {
+export function convertStringObjectToProject(projectStringObject) {
+  const projectStringObjectAsProject = projectFactory(projectStringObject.name);
+
+  projectStringObject.tasksAsStringObjects.forEach(t => {
+    projectStringObjectAsProject.addTask(convertStringObjectToTask(t));
+  });
+
+  return projectStringObjectAsProjectl
+}
+
+export function convertProjectListToStringObject(projectList) {
   const projectListAsStringObjects = projectList.map(p => convertProjectToStringObjectNotation(p));
   
-  let projectListAsString = {
+  const projectListAsString = {
     projectListAsStringObjects
   };
   return projectListAsString;
+}
+
+export function convertStringObjectToProjectList(projectListStringObject) {
+  const projectListStringObjectAsProjectList = new ProjectList();
+
+  projectListStringObject.projectListAsStringObjects.forEach(p => {
+    projectListStringObjectAsProjectList.addProject(convertStringObjectToProject(p));
+  });
+
+  return projectListStringObjectAsProjectList;
 }
