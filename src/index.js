@@ -6,9 +6,6 @@ import * as DOMUtil from './dom-util';
 import ProjectList from './project-list';
 import * as LocalStorage from './local-storage';
 
-// I need a place where I can store projects data and retrieve when I need it like a database
-// or some type of server that saves and retrieves information only when I need it
-
 const elements = {
   //Be careful with this implementation because these document function calls might only get called
   //once so if you need updated document information than this might lead to bugs, keep note of this
@@ -23,16 +20,71 @@ const elements = {
   taskList: document.getElementById('task-list'),
 }
 
-//First thing after page loads
-//We must load all projects from localStorage
-//populate our DOM with these lists of projects
-//add event listeners to all these projects including general to display their tasks,
-//Each project tasks must be retrieved from localStorage if user clicks on project and, 
-//these tasks should be displayed along with the project header
-//default display should always show General project when user refreshes or after browser closes
+/*
+  Features To Implement in Future:
+   - Inbox
+   - Making Inbox the main project/category that always shows up upon page reload, refresh, etc...
+   - Today
+   - Tomorrow
+   - This Week
+   - This Month
+   - View All Tasks from All projects sorted by Project
+   - View All Tasks from All Projects sorted by Date
+   - View All Tasks from All Projects sorted by Priority
+   - Sort Tasks of specific project selected and displayed by priority
+   - Sort Tasks of specific project selected and displayed by date
+   - Sort Projects by Name Alphabetically A - Z
+   - Sort Projects by Name Alphabetically Z - A
+   - Sort Projects by Largest Number of Tasks
+   - Sort Projects by Smallest Number of Tasks
+   - Give User option to move menu nav bar left, top, or right
+   - Mobile App Friendly
+   - Different Colors for different Priorities
+*/
 
-const todoListProjects = initProjectList();
-initTodoListUI();
+//Load projectlist from localStorage, if null initialize empty project list
+let todoListProjects;
+try {
+  todoListProjects = LocalStorage.convertStringObjectToProjectList(JSON.parse(localStorage.getItem('projectList')));
+} catch (e) {
+  console.error(e.message, e.name);
+}
+
+//Check whether localStorage does not contain a saved todo project list or empty list
+if (!todoListProjects || todoListProjects.getProjects().length === 0) {
+  initProjectList();
+  generalProjectEventListener();
+} else {
+  //Take every project that we got from local storage and populate them onto the UI
+  todoListProjects.getProjects().forEach((p, index) => {
+    //Display each project in left menu
+    const pElement = DOMUtil.appendChildToParent('li', 'button');
+    pElement.firstChild.textContent = p.getName();
+    
+    const xSpan = document.createElement('span');
+    xSpan.classList.add('delete-project');
+    xSpan.setAttribute('onclick', 'deleteProject()');
+    xSpan.onclick = deleteProject;
+    xSpan.textContent = 'X';
+
+    pElement.firstChild.append(xSpan);
+    elements.projectList.append(pElement);
+
+    //Add Event Listener that handles clicks on project to display tasks
+    pElement.addEventListener('click', viewProjectTasks, false);
+
+    /*....Should we display the first project upon reload/refresh???
+      ....Or maybe we should display Inbox or Today's tasks upon reload???
+      ....For now we will display empty Task Section passing responsibility to 
+      ....User to display whatever task he wants upon reload/refresh of the webpage
+    */
+    document.getElementById('task-list-header').textContent = "";
+    if (index === 0) {null}
+  });
+}
+
+onAddProjectEventListener();
+onAddTaskEventListener();
 
 /**
  * Activate event Listener on General project to display it's tasks
@@ -70,17 +122,6 @@ function createProjectEventListener() {
   elements.createButton.addEventListener('click', addProject);
 }
 
-function initTodoListUI() {
-  /*These functions need to go into a separate module for initializing the todo List UI*/
-
-  //listens for clicks on general button; displays general project tasks on fire
-  generalProjectEventListener();
-  //listens for clicks on add Project button to display user input field to add project
-  onAddProjectEventListener();
-  //listens for clicks on add Task button for given the appropriate Project currently being viewed
-  onAddTaskEventListener();
-}
-
 /**
  * Initialize project list and returns a ProjectList object that contains the default General project.
  * @returns ProjectList object that contains the default General project
@@ -91,14 +132,15 @@ function initTodoListUI() {
   const general = projectfactory("General");
   projects.addProject(general);
 
-  //...Before storing in localStorage convert Project/Task objects into String objects
+  document.querySelector(".general-list-item").style.display = "list-item";
 
   //Init the X cancel span element with a click event listener that deletes general project
   const generalDelete = document.querySelector(".delete-project");
   generalDelete.setAttribute('onclick', 'deleteProject()');
   generalDelete.onclick = deleteProject;
 
-  return projects;
+  todoListProjects = projects;
+  localStorage.setItem('projectList', JSON.stringify(LocalStorage.convertProjectListToStringObject(todoListProjects)));
 }
 
 function initAddProjectEvent() {
@@ -111,6 +153,30 @@ function initAddProjectEvent() {
 
   cancelCreatingNewProjectEventListener();
   createProjectEventListener();
+}
+
+function initAddTaskEvent() {
+  //If no project is selected return message to user to select a project
+  //Check if project header is selected if not user is prompted to select an existing project
+  //or create new one and select it before adding tasks
+  if (document.getElementById('task-list-header').textContent === "" || 
+      document.getElementById('task-list-header').textContent === undefined)
+        alert("Must select a project before adding tasks.");
+  
+  // window is displayed with input formatted form entries
+  // user enters required values
+  // user clicks complete
+  // task is created
+  // task is displayed in page under project heading
+
+  //...Display a fixed window overlapping area where tasks are displayed that as a form
+  //...With a list of fields for creating a new task
+
+  //...There should be an exit X button in the top right to cancel task creating
+  //...And there should be create Task button in the bottom to finish creating Task
+
+  //...Make sure that all required fields are filled before task creation
+
 }
 
 /**
@@ -128,6 +194,8 @@ function initAddProjectEvent() {
 
   if (todoListProjects.addProject(project) === "Duplicate") 
     return 'Duplicate';
+  
+  localStorage.setItem('projectList', JSON.stringify(LocalStorage.convertProjectListToStringObject(todoListProjects)));
 
   // Call cancel event handler function to remove input and create/cancel buttons
   restoreAddProjectButtonDisplay();
@@ -147,38 +215,13 @@ function initAddProjectEvent() {
   projectElement.firstChild.append(xSpan);
   elements.projectList.append(projectElement);
 
-  //...Everytime a new Project is created, add a click event listener for that project button
-  //...to display tasks when clicked
-  projectElement.name = project.getName();
+  //When a new Project is created, add a click listener to display tasks when clicked
   projectElement.addEventListener('click', viewProjectTasks, false);
 
   return true;
 }
 
-function initAddTaskEvent() {
-  //If no project is selected return message to user to select a project
-  //Check if project header is selected if not user is prompted to select an existing project
-  //or create new one and select it before adding tasks
-  if (document.getElementById('task-list-header').textContent === "" || 
-      document.getElementById('task-list-header').textContent === undefined)
-        alert("Must select a project before adding tasks.");
-  
-  // User clicks add task button (requires click event listener)
-  // window is displayed with input formatted form entries
-  // user enters required values
-  // user clicks complete
-  // task is created
-  // task is displayed in page under project heading
 
-  //...Display a fixed window overlapping area where tasks are displayed that as a form
-  //...With a list of fields for creating a new task
-
-  //...There should be an exit X button in the top right to cancel task creating
-  //...And there should be create Task button in the bottom to finish creating Task
-
-  //...Make sure that all required fields are filled before task creation
-
-}
 
 function viewProjectTasks(event) {
   //First clear current project's task View
@@ -193,7 +236,6 @@ function viewProjectTasks(event) {
 
   //...Populate task list with current project
 
-
 }
 
 /**
@@ -206,8 +248,9 @@ function deleteProject(event) {
 
   todoListProjects.removeProject(projectName);
   event.path[2].remove();
-}
 
+  localStorage.setItem('projectList', JSON.stringify(LocalStorage.convertProjectListToStringObject(todoListProjects)));
+}
 
 /**
  * Handles an event where user clicks on the cancel button when creating a new project by
