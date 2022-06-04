@@ -29,14 +29,14 @@ body
   font-size: 28px
   padding-bottom: 10px
 
-.delete-project
+.delete-project, .cancel-task
   float: right
   border: 1px black solid
-  width: 20px
-  height: 20px
+  width: 23px
+  height: 23px
   text-align: center
   
-.delete-project:hover
+.delete-project:hover, .cancel-task:hover
   color: red
 
 #on-add-project
@@ -58,11 +58,12 @@ body
 
 .todo-content
   width: 100%
-  padding-left: 10%
+  padding-left: 5%
+  padding-right: 5%
   padding-top: 25px
 
 button, input
-  font-size: 16px
+  font-size: 18px
   text-align: left
   padding: 10px 20px
   margin-bottom: 10px
@@ -79,23 +80,99 @@ ul
   margin: 0
 
 .add-task
+  margin-top: 20px
   width: 140px
-
-.general
 
 .general-list-item
   display: none
 
-#task-list
+.task-form 
+  border: solid 1px black
+  font-size: 18px
+  padding: 15px
+  width: 100%
+  background-color: rgb(201, 228, 228)
+  display: none
+
+.task-form h2
+  text-align: center
+  margin-bottom: 5px
+
+.task-form .cancel-task 
+  height: 30px
+  width: 28px
+
+.task-label-input
+  display: flex
+  column-gap: 10px
+  margin-bottom: 10px
+
+.task-label-input label
+  min-width: max-content
+
+label[for="name"]
+  align-self: center
+
+input[type="text"]
+  align-self: center
+  height: 47px
+  margin-bottom: 0px
+  padding: 10px 14px
+
+label[for="date"]
+  align-self: center
+
+input[type="date"]
+  align-self: center
+  height: 47px
+  margin-bottom: 0px
+  padding: 10px 14px
+
+p
+  margin-bottom: 10px
+
+label[for="low"], label[for="normal"], label[for="high"]
+  margin-left: 98px
+
+input[type="radio"]
+  width: max-content
+
+#low
+  margin-left: 32px
+
+#normal
+  margin-left: 10px
+
+#high
+  margin-left: 29px
+
+textarea 
+  padding: 10px
+  width: 100%
+
+
+#create-task-button
+  margin-bottom: 0
+  text-align: center
+  
+
+.header-add-task-container
+  display: flex
+  justify-content: space-between
+  align-items: center
+
 
 #task-list-header
-  
+
+.add-task
+
+.general
+
+#task-list
   
 #add-project-button
-
 
 .left-menu button
 
 #on-add-project input
 
-.add-task
