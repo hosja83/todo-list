@@ -21,11 +21,11 @@
         </ul>
         <button id="add-project-button">Add Project</button>
         <div id="on-add-project">
-          <form onsubmit="return false">
+          <form onsubmit="return false" novalidate>
             <input id="create-project" type="text">
             <div class="check-cancel-container">
               <button type="submit" id="create-on-add-project">create</button>
-              <button id="cancel-on-add-project">cancel</button>
+              <button type="button" id="cancel-on-add-project">cancel</button>
             </div>
           </form>
         </div>
@@ -33,11 +33,11 @@
     <div class="todo-content">
       <div class="header-add-task-container">
         <h1 id="task-list-header">General</h1>
-        <button class="add-task">Add Task</button>
+        <button type="button" class="add-task">Add Task</button>
       </div>
       <div class="task-form">
-        <h2>New Task<span class="cancel-task" onclick="cancelCreatingNewTask(event)">X</span></h2>
-        <form>
+        <h2>New Task<span class="cancel-task">X</span></h2>
+        <form id="task-form">
           <div class="task-label-input">
             <label for="name">Task Title: </label>
             <input type="text" id="name" name="name" required placeholder="Enter Task Title Here...">
