@@ -1,10 +1,11 @@
 import { formatDistanceStrict } from 'date-fns';
 import './style.sass';
 import Project, {projectFactory as projectfactory} from './project';
-import Task, {taskfactory} from './task';
+import {taskfactory} from './task';
 import * as DOMUtil from './dom-util';
 import ProjectList from './project-list';
 import * as LocalStorage from './local-storage';
+import UserException from './exception';
 
 const elements = {
   //Be careful with this implementation because these document function calls might only get called
@@ -110,16 +111,31 @@ function onAddTaskEventListener() {
 }
 
 /**
+ * Adds event listener for the create button that adds a project to the list of projects.
+ */
+ function createProjectEventListener() {
+  elements.createButton.addEventListener('click', addProject);
+}
+
+/**
  * Adds event listener for the cancel button that cancels the creating of a new project.
  */
  function cancelCreatingNewProjectEventListener() {
   elements.cancelButton.addEventListener('click', restoreAddProjectButtonDisplay);
 }
+
 /**
- * Adds event listener for the create button that adds a project to the list of projects.
+ * Adds event listener that listens for clicks on the create new task button to add new tasks.
  */
-function createProjectEventListener() {
-  elements.createButton.addEventListener('click', addProject);
+function createNewTaskEventListener() {
+    document.getElementById('task-form').addEventListener('submit', addNewTask, false);
+}
+
+/**
+ * Add event listener for canceling the creating of a new task.
+ */
+function addCancelCreatingNewTaskEventListener() {
+  document.querySelector(".cancel-task").addEventListener('click', removeCreatingNewTaskForm, false);
 }
 
 /**
@@ -160,23 +176,103 @@ function initAddTaskEvent() {
   //Check if project header is selected if not user is prompted to select an existing project
   //or create new one and select it before adding tasks
   if (document.getElementById('task-list-header').textContent === "" || 
-      document.getElementById('task-list-header').textContent === undefined)
+      document.getElementById('task-list-header').textContent === undefined) {
         alert("Must select a project before adding tasks.");
-  
+        return;
+  }
+
   // window is displayed with input formatted form entries
-  // user enters required values
-  // user clicks complete
-  // task is created
-  // task is displayed in page under project heading
+  document.querySelector(".task-form").style.display = 'block';
 
-  //...Display a fixed window overlapping area where tasks are displayed that as a form
-  //...With a list of fields for creating a new task
+  // user may click exit X button
+  addCancelCreatingNewTaskEventListener();
 
-  //...There should be an exit X button in the top right to cancel task creating
-  //...And there should be create Task button in the bottom to finish creating Task
+  // user may click create new task button
+  createNewTaskEventListener();
 
-  //...Make sure that all required fields are filled before task creation
+}
 
+/**
+ * Adds a new Task to the list of Tasks under the appropriate Project. Returns
+ * 'Invalid Task' if new Task was invalid.
+ * 
+ * @param {Event} e event which called this method
+ * @returns Invalid task if task was not a valid task or true if valid task was added
+ */
+function addNewTask(e) {
+  //Prevent default submit event behavior
+  e.preventDefault();
+
+  // Validate Task
+  let newTask;
+  try {
+    newTask = validateTask();
+  } catch (e) {
+    console.log(e.message, e.name);
+    // Alert user if type of error is a duplicate Task title
+    if (e.message === 'Duplicate Task title')
+      alert('Task already exists.');
+    return 'Invalid Task';
+  }
+  // If Task is valid, let's clear the form display
+  removeCreatingNewTaskForm();
+
+  // Add newTask in the Project's list of Tasks which is under the todoListProjects
+  let taskToBeAdded = taskfactory(newTask.title.trim(), newTask.date, newTask.priority, newTask.description);
+  let projectToUpdate = todoListProjects.getProject(newTask.projectname);
+  projectToUpdate.addTask(taskToBeAdded);
+
+  todoListProjects.setProject(newTask.projectname, projectToUpdate);
+  localStorage.setItem('projectList', JSON.stringify(LocalStorage.convertProjectListToStringObject(todoListProjects)));
+
+  // Populate the newTask in the list of tasks under the Project header
+  // Display Valid Task under project heading
+  const taskList = document.getElementById('task-list');
+
+  const taskListItem = document.createElement('li');
+  taskListItem.textContent = taskToBeAdded.getTaskInfo();
+  taskList.appendChild(taskListItem);
+}
+
+function validateTask() {
+  //Store values in variables and check their validity
+  const taskName = document.getElementById('name').value;
+  const taskDueDate = document.getElementById('date').value;
+  const taskDescription = document.getElementById('description').value;
+  const taskPriority = [...document.getElementsByName('priority')].filter(element => {
+    return (element.checked === true) ? true : false;
+  });
+
+  const projectName = document.getElementById('task-list-header').textContent;
+  
+  const filteredTasks = todoListProjects.getProject(projectName).getTasks().filter(t => {
+    return (t.getName().trim() === taskName.trim()) ? true : false;
+  });
+
+  //Check for empty task name & duplicate task names
+  if (taskName === "" || taskName === undefined || taskName === null)
+    throw new UserException('Invalid Task title');
+  if (filteredTasks.length > 0)
+    throw new UserException('Duplicate Task title');
+  
+  //Check for empty Due Date
+  if (taskDueDate === "")
+    throw new UserException('Invalid Due Date');
+
+  //Check for unselected priority
+  if (taskPriority.length < 1)
+    throw new UserException('No priority is selected');
+
+  //Return newly created Task object with necessary information to instantiate a Task object
+  const newTask = {
+    title: taskName,
+    date: taskDueDate,
+    priority: taskPriority[0].value,
+    description: taskDescription,
+    projectname: projectName,
+  };
+
+  return newTask;
 }
 
 /**
@@ -221,8 +317,6 @@ function initAddTaskEvent() {
   return true;
 }
 
-
-
 function viewProjectTasks(event) {
   //First clear current project's task View
   if (elements.taskList.hasChildNodes) {
@@ -234,8 +328,17 @@ function viewProjectTasks(event) {
   const projectName = event.target.textContent.slice(0, -1);
   document.getElementById('task-list-header').textContent = projectName;
 
-  //...Populate task list with current project
+  //...Check if project has any tasks, if not return
+  //Below gets index of child list item in list
+  //Array.from(document.getElementById('project-list').children).indexOf(event.path[1])
 
+  console.log(todoListProjects.getProject(projectName));
+  //Populate task list with current project
+  todoListProjects.getProject(projectName).getTasks().forEach(t => {
+    const taskListItem = document.createElement('li');
+    taskListItem.textContent = t.getTaskInfo();
+    elements.taskList.appendChild(taskListItem);
+  });
 }
 
 /**
@@ -246,6 +349,14 @@ function deleteProject(event) {
   //Removes the last character from textContent, example 'GeneralX' becomes 'General'
   const projectName = event.path[1].textContent.slice(0, -1);
 
+  // If this project is currently displayed, remove it from view
+  if (projectName === document.getElementById('task-list-header').textContent) {
+    document.getElementById('task-list-header').textContent = "";
+    DOMUtil.removeAllChildNodes(elements.taskList);
+  }
+
+  // Remove from DOM and it's viewProjectTasks event listener
+  event.path[2].removeEventListener('click', viewProjectTasks, false);
   todoListProjects.removeProject(projectName);
   event.path[2].remove();
 
@@ -266,4 +377,20 @@ function restoreAddProjectButtonDisplay() {
   newAddProjectButton.setAttribute('id', "add-project-button");
   newAddProjectButton.textContent = "Add Project";
   newAddProjectButton.addEventListener('click', initAddProjectEvent);
+}
+
+function removeCreatingNewTaskForm() {
+  //Clear all input fields
+  document.getElementById('name').value = "";
+  document.getElementById('date').value = "";
+  document.getElementById('description').value = "";
+
+  //Both of these methods clear radio buttons using checked property
+  //Convert nodelist into array to execute Array.map function
+  [...document.getElementsByName('priority')].map(element => element.checked = false);
+  //Or use forEach function for nodelists that can iterate these types of objects
+  document.getElementsByName('priority').forEach(element => element.checked = false);
+
+  //Get rid of the Task display
+  document.querySelector('.task-form').style.display = 'none';
 }
