@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/703f595fbc.js" crossorigin="anonymous"></script>
     <title>Todo List</title>
-  <script defer src="./runtime.bundle.js?8616fcd7690af83b1661"></script><script defer src="./index.bundle.js?8616fcd7690af83b1661"></script></head>
+  <script defer src="./runtime.bundle.js?610b4f5301b3204c7977"></script><script defer src="./index.bundle.js?610b4f5301b3204c7977"></script></head>
 
   <body>
     <div class="header">Todo List</div>
@@ -15,26 +15,60 @@
       <div class="left-menu">
         <div class="projects">Projects</div>
         <ul id="project-list">
-          <li>
+          <li class="general-list-item">
             <button class="general">General<span class="delete-project" onclick="deleteProject(event)">X</span></button>
           </li>
         </ul>
         <button id="add-project-button">Add Project</button>
         <div id="on-add-project">
-          <form onsubmit="return false">
+          <form onsubmit="return false" novalidate>
             <input id="create-project" type="text">
             <div class="check-cancel-container">
               <button type="submit" id="create-on-add-project">create</button>
-              <button id="cancel-on-add-project">cancel</button>
+              <button type="button" id="cancel-on-add-project">cancel</button>
             </div>
           </form>
         </div>
       </div>
     <div class="todo-content">
-      <h1 id="task-list-header">General</h1>
+      <div class="header-add-task-container">
+        <h1 id="task-list-header">General</h1>
+        <button type="button" class="add-task">Add Task</button>
+      </div>
+      <div class="task-form">
+        <h2>New Task<span class="cancel-task">X</span></h2>
+        <form id="task-form">
+          <div class="task-label-input">
+            <label for="name">Task Title: </label>
+            <input type="text" id="name" name="name" required placeholder="Enter Task Title Here...">
+          </div>
+          <div class="task-label-input">
+            <label for="date">Due Date: </label>
+            <input type="date" id="date" name="date" required>
+          </div>
+          <p>Please select one of the following Priorities: </p>
+          <div class="task-label-input">
+            <label for="low">Low</label>
+            <input type="radio" id="low" name="priority" value="Low" required>
+          </div>
+          <div class="task-label-input">
+            <label for="normal">Normal</label>
+            <input type="radio" id="normal" name="priority" value="Normal" required>
+          </div>
+          <div class="task-label-input">
+            <label for="high">High</label>
+            <input type="radio" id="high" name="priority" value="High" required>
+          </div>
+          <div class="task-label-input">
+            <label for="description">Description: </label>
+            <textarea id="description" name="description" maxlength="620" placeholder="Describe your task here..." rows="8" cols="52"></textarea>
+          </div>
+            <button type="submit" id="create-task-button">Create New Task</button>
+        </form>
+      </div>
       <ul id="task-list">
       </ul>
-      <button class="add-task">Add Task</button>
+      
     </div>
   </body>
 
