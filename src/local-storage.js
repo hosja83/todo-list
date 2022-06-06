@@ -48,6 +48,24 @@
       ]
   }'
 
+  '{
+    "projectListAsStringObjects":
+      [
+        {
+          "name":"General",
+          "tasksAsStringObjects":
+            [
+              {
+                "name":"Quran",
+                "dueDate":"2022-06-05",
+                "priority":"High",
+                "description":"Quran Study"
+              }
+            ]
+        }
+      ]
+  }'
+
   //IMPORTANT TO NOTE: LOCAL STORAGE ONLY STORES STRINGS SO YOU MUST STRINGIFY YOUR OBJECTS
   //USING JSON.stringify AND YOU MUST PARSE YOUR OBJECTS BEING STORED AND RETRIEVED BACK
   //TO THEIR APPROPRIATE STATES. SO IF YOU ARE STORING OBJECTS YOU MUST PREPARE THEM TO BE 
@@ -56,7 +74,6 @@
 */
 
 import Task from './task';
-import parse from 'date-fns/parse';
 import {projectFactory} from './project.js';
 import ProjectList from './project-list';
 import UserException from './exception';
@@ -75,7 +92,7 @@ export function convertStringObjectToTask(taskStringObject) {
   const taskStringObjectAsTask = new Task(taskStringObject.name,
     //type of date input received from user is going to determine if we need to parse or
     //how we need to parse 
-                                        parse(taskStringObject.duedate), 
+                                        taskStringObject.dueDate, 
                                         taskStringObject.priority,
                                         taskStringObject.description);
   return taskStringObjectAsTask;
