@@ -12,8 +12,21 @@ export default class ProjectList {
     this.projects = [];
   }
 
+  /**
+   * Returns the Project object that matches the given name from the array of projects in
+   * ProjectList.
+   * @param {String} projectName name of the Project to get
+   * @returns Returns the Project that matches the given name
+   */
   getProject(projectName) {
-    return findFirst(this.projects, (p) => p.getName() === projectName.getName());
+    //returns the project found in the array
+    return (findFirst(this.projects, (p) => p.getName() === projectName))[0];
+  }
+
+  setProject(projectName, newProject) {
+    //find where(index) the project is located in the projects array
+    const index = this.projects.findIndex(p => p.getName() === projectName);
+    this.projects[index] = newProject;
   }
 
   getProjects() {
