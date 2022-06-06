@@ -11,6 +11,13 @@ export function removeFirst(arr, callbackFn) {
   return arr.splice(index, 1);
 }
 
+/**
+ * Returns an array that contains the first occurrence which meets the callbackFn's criteria.
+ * 
+ * @param {Array} arr the array to traverse
+ * @param {Function} callbackFn the function used to find the first occurrence
+ * @returns 
+ */
 export function findFirst(arr, callbackFn) {
   const index = arr.findIndex(callbackFn);
   return arr.slice(index, 1);
