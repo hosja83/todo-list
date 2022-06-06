@@ -1,4 +1,3 @@
-import { formatDistanceStrict } from 'date-fns';
 import './style.sass';
 import Project, {projectFactory as projectfactory} from './project';
 import {taskfactory} from './task';
