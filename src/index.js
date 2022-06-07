@@ -40,6 +40,17 @@ const elements = {
    - Give User option to move menu nav bar left, top, or right
    - Mobile App Friendly
    - Different Colors for different Priorities
+
+   - Requirements to consider changing, make duplicate Tasks allowable so user can organize 
+     reoccurring tasks within same project.
+   
+   - Implement editing a task
+   - Implement deleting a task
+
+   - Design problems to fix: 
+      - Separate the EventListeners into a separate file
+      - Make sure to remove event listeners added to DOM elements when removing their
+        elements to prevent memory leak issues
 */
 
 //Load projectlist from localStorage, if null initialize empty project list
@@ -58,20 +69,25 @@ if (!todoListProjects || todoListProjects.getProjects().length === 0) {
   //Take every project that we got from local storage and populate them onto the UI
   todoListProjects.getProjects().forEach((p, index) => {
     //Display each project in left menu
-    const pElement = DOMUtil.appendChildToParent('li', 'button');
-    pElement.firstChild.textContent = p.getName();
+    const pListElement = DOMUtil.appendChildToParent('li', 'div');
+    const pContainerElement = pListElement.firstChild;
+    const pButton = document.createElement('button');
+    pContainerElement.appendChild(pButton);
     
-    const xSpan = document.createElement('span');
-    xSpan.classList.add('delete-project');
-    xSpan.setAttribute('onclick', 'deleteProject()');
-    xSpan.onclick = deleteProject;
-    xSpan.textContent = 'X';
+    const pDeleteButton = document.createElement('button');
+    pDeleteButton.classList.add('delete-project');
+    pDeleteButton.setAttribute('onclick', 'deleteProject()');
+    pDeleteButton.onclick = deleteProject;
+    pDeleteButton.textContent = 'X';
+    pContainerElement.append(pDeleteButton);
+    
+    pContainerElement.firstChild.textContent = p.getName();
+    pContainerElement.classList.add('project-buttons-container');
 
-    pElement.firstChild.append(xSpan);
-    elements.projectList.append(pElement);
+    elements.projectList.append(pListElement);
 
-    //Add Event Listener that handles clicks on project to display tasks
-    pElement.addEventListener('click', viewProjectTasks, false);
+    //When a new Project is created, add a click listener to display tasks when clicked
+    pButton.addEventListener('click', viewProjectTasks, false);
 
     /*....Should we display the first project upon reload/refresh???
       ....Or maybe we should display Inbox or Today's tasks upon reload???
@@ -183,6 +199,8 @@ function initAddTaskEvent() {
   // window is displayed with input formatted form entries
   document.querySelector(".task-form").style.display = 'block';
 
+  //make sure that projects cannot be selected 
+
   // user may click exit X button
   addCancelCreatingNewTaskEventListener();
 
@@ -288,7 +306,7 @@ function validateTask() {
   const project = new Project(elements.addProjectInput.value);
 
   if (todoListProjects.addProject(project) === "Duplicate") 
-    return 'Duplicate';
+    return 'Duplicate'; //alert is handled in project-list object
   
   localStorage.setItem('projectList', JSON.stringify(LocalStorage.convertProjectListToStringObject(todoListProjects)));
 
@@ -296,44 +314,49 @@ function validateTask() {
   restoreAddProjectButtonDisplay();
 
   // Append projectElement to the list in the left-hand side menu
-  const projectElement = DOMUtil.appendChildToParent('li', 'button');
-  projectElement.firstChild.textContent = project.getName();
+  const pListElement = DOMUtil.appendChildToParent('li', 'div');
+  const pContainerElement = pListElement.firstChild;
+  const pButton = document.createElement('button');
+  pContainerElement.appendChild(pButton);
   
-  // Add delete project X span, deleteProject click attribute, delete project class
-  const xSpan = document.createElement('span');
-  xSpan.classList.add('delete-project');
-  xSpan.setAttribute('onclick', 'deleteProject()');
-  xSpan.onclick = deleteProject;
-  xSpan.textContent = 'X';
+  const pDeleteButton = document.createElement('button');
+  pDeleteButton.classList.add('delete-project');
+  pDeleteButton.setAttribute('onclick', 'deleteProject()');
+  pDeleteButton.onclick = deleteProject;
+  pDeleteButton.textContent = 'X';
+  pContainerElement.append(pDeleteButton);
 
-  // Append xSpan to new project button and project to project list in left menu
-  projectElement.firstChild.append(xSpan);
-  elements.projectList.append(projectElement);
+  pContainerElement.firstChild.textContent = project.getName();
+  pContainerElement.classList.add('project-buttons-container');
+
+  elements.projectList.append(pListElement);
 
   //When a new Project is created, add a click listener to display tasks when clicked
-  projectElement.addEventListener('click', viewProjectTasks, false);
+  pButton.addEventListener('click', viewProjectTasks, false);
 
   return true;
 }
 
 function viewProjectTasks(event) {
-  //First clear current project's task View
-  if (elements.taskList.hasChildNodes) {
-    // delete all childNodes
+  //First check if Project Tasks is already being displayed, therefore just return exit function
+  if (event.target.textContent === document.getElementById('task-list-header').textContent)
+    return 'Project already displayed';
+
+  //Clear current project's task View by deleting all childNodes
+  if (elements.taskList.hasChildNodes)
     DOMUtil.removeAllChildNodes(elements.taskList);
-  }
 
   //Change header name to current project name
-  const projectName = event.target.textContent.slice(0, -1);
+  const projectName = event.target.textContent;
   document.getElementById('task-list-header').textContent = projectName;
 
-  //...Check if project has any tasks, if not return
-  //Below gets index of child list item in list
-  //Array.from(document.getElementById('project-list').children).indexOf(event.path[1])
+  //Check if project has any tasks, if not return
+  if (todoListProjects.getProject(projectName).getTasks().length === 0)
+    return 'Project does not contain any Tasks';
 
-  console.log(todoListProjects.getProject(projectName));
   //Populate task list with current project
   todoListProjects.getProject(projectName).getTasks().forEach(t => {
+    //...We need to change this to a better design for displaying Tasks
     const taskListItem = document.createElement('li');
     taskListItem.textContent = t.getTaskInfo();
     elements.taskList.appendChild(taskListItem);
@@ -347,6 +370,12 @@ function viewProjectTasks(event) {
 function deleteProject(event) {
   //Removes the last character from textContent, example 'GeneralX' becomes 'General'
   const projectName = event.path[1].textContent.slice(0, -1);
+
+  //If project to delete is in process of adding a task from form, clear the new task form
+  if (projectName === document.getElementById('task-list-header').textContent
+      && document.querySelector('.task-form').style.display === 'block') {
+    removeCreatingNewTaskForm();
+  }
 
   // If this project is currently displayed, remove it from view
   if (projectName === document.getElementById('task-list-header').textContent) {
