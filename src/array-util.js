@@ -20,5 +20,5 @@ export function removeFirst(arr, callbackFn) {
  */
 export function findFirst(arr, callbackFn) {
   const index = arr.findIndex(callbackFn);
-  return arr.slice(index, 1);
+  return arr.slice(index, index + 1); //or just return arr[index]
 }
