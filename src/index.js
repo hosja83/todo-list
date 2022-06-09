@@ -40,6 +40,15 @@ const elements = {
    - Give User option to move menu nav bar left, top, or right
    - Mobile App Friendly
    - Different Colors for different Priorities
+   - Move a Task to another Project (button attached to Task that shows dropdown list of projects)
+   - Have the optional feature that user can specify exact time task needs to be done by
+   - Have a ... button next to Project name that gives option to rename or delete project
+   - Have a button on the existing task that moves the existing task to another project.
+     Also if adding features/button icons become crowded, add the vertical three dot icon that
+     represents "More" options
+   - Implement a toggle button on the top right hand corner of page switch between light-colored,
+     colored, to dark mode
+   - Implement a search bar for Tasks
 
    - Requirements to consider changing, make duplicate Tasks allowable so user can organize 
      reoccurring tasks within same project.
