@@ -17,16 +17,11 @@
     </div>
     <div class="mid-section">
       <div class="left-menu">
-        <div class="projects">Projects</div>
-        <ul id="project-list">
-          <li class="general-list-item">
-            <div class="project-buttons-container">
-              <button class="general">General</button>
-              <button class="delete-project" onclick="deleteProject(event)">X</span>
-            </div>
-          </li>
-        </ul>
-        <button id="add-project-button">Add Project</button>
+        <div class="projects-header-container">
+          <div class="projects">Projects</div>
+          <div class="add-icon"></div>
+          <button id="add-project-button">Add Project</button>
+        </div>
         <div id="on-add-project">
           <form onsubmit="return false" novalidate>
             <input id="create-project" type="text">
@@ -36,6 +31,14 @@
             </div>
           </form>
         </div>
+        <ul id="project-list">
+          <li class="general-list-item">
+            <div class="project-buttons-container">
+              <button class="general">General</button>
+              <button class="delete-project" onclick="deleteProject(event)">X</span>
+            </div>
+          </li>
+        </ul>
       </div>
       <div class="todo-content">
         <div class="header-add-task-container">
