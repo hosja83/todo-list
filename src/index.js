@@ -185,8 +185,10 @@ function addCancelCreatingNewTaskEventListener() {
 
 function initAddProjectEvent() {
   // Add Project button disappears temporarily, Input text field appears
-  document.getElementById('add-project-button').remove();
   elements.addProjectInputContainer.style.display = "block";
+
+  // Remove event Listener while creating new project form is active and displayed
+  elements.addProjectButton.removeEventListener('click', initAddProjectEvent);
   
   //..Insert a way to make the input field focus or show cursor for typing text in after click
   //..add project event gets initiated
@@ -409,11 +411,8 @@ function restoreAddProjectButtonDisplay() {
   elements.addProjectInput.value = "";
   elements.addProjectInputContainer.style.display = "none";
 
-  // Restores the Add Project Button and it's add project event listener
-  const newAddProjectButton = elements.leftMenuContainer.appendChild(document.createElement('button'));
-  newAddProjectButton.setAttribute('id', "add-project-button");
-  newAddProjectButton.textContent = "Add Project";
-  newAddProjectButton.addEventListener('click', initAddProjectEvent);
+  // No need to redo creation of add-project button, just restore add project event listener
+  elements.addProjectButton.addEventListener('click', initAddProjectEvent);
 }
 
 function removeCreatingNewTaskForm() {
