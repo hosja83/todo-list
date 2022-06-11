@@ -77,27 +77,7 @@ if (!todoListProjects || todoListProjects.getProjects().length === 0) {
 } else {
   //Take every project that we got from local storage and populate them onto the UI
   todoListProjects.getProjects().forEach((p, index) => {
-    //Display each project in left menu
-    const pListElement = DOMUtil.appendChildToParent('li', 'div');
-    const pContainerElement = pListElement.firstChild;
-    const pButton = document.createElement('button');
-    pContainerElement.appendChild(pButton);
-    
-    const pDeleteButton = document.createElement('button');
-    pDeleteButton.classList.add('delete-project');
-    pDeleteButton.setAttribute('onclick', 'deleteProject()');
-    pDeleteButton.onclick = deleteProject;
-    pDeleteButton.textContent = 'X';
-    pContainerElement.append(pDeleteButton);
-    
-    pContainerElement.firstChild.textContent = p.getName();
-    pContainerElement.classList.add('project-buttons-container');
-
-    elements.projectList.append(pListElement);
-
-    //When a new Project is created, add a click listener to display tasks when clicked
-    pButton.addEventListener('click', viewProjectTasks, false);
-
+    appendProjectToList(p.getName());
     /*....Should we display the first project upon reload/refresh???
       ....Or maybe we should display Inbox or Today's tasks upon reload???
       ....For now we will display empty Task Section passing responsibility to 
@@ -262,46 +242,6 @@ function addNewTask(e) {
   taskList.appendChild(taskListItem);
 }
 
-function validateTask() {
-  //Store values in variables and check their validity
-  const taskName = document.getElementById('name').value;
-  const taskDueDate = document.getElementById('date').value;
-  const taskDescription = document.getElementById('description').value;
-  const taskPriority = [...document.getElementsByName('priority')].filter(element => {
-    return (element.checked === true) ? true : false;
-  });
-
-  const projectName = document.getElementById('task-list-header').textContent;
-  
-  const filteredTasks = todoListProjects.getProject(projectName).getTasks().filter(t => {
-    return (t.getName().trim() === taskName.trim()) ? true : false;
-  });
-
-  //Check for empty task name & duplicate task names
-  if (taskName === "" || taskName === undefined || taskName === null)
-    throw new UserException('Invalid Task title');
-  if (filteredTasks.length > 0)
-    throw new UserException('Duplicate Task title');
-  
-  //Check for empty Due Date
-  if (taskDueDate === "")
-    throw new UserException('Invalid Due Date');
-
-  //Check for unselected priority
-  if (taskPriority.length < 1)
-    throw new UserException('No priority is selected');
-
-  //Return newly created Task object with necessary information to instantiate a Task object
-  const newTask = {
-    title: taskName,
-    date: taskDueDate,
-    priority: taskPriority[0].value,
-    description: taskDescription,
-    projectname: projectName,
-  };
-
-  return newTask;
-}
 
 /**
  * Adds a newly created project to the project list and restores view of left menu
@@ -324,7 +264,12 @@ function validateTask() {
   // Call cancel event handler function to remove input and create/cancel buttons
   restoreAddProjectButtonDisplay();
 
-  // Append projectElement to the list in the left-hand side menu
+  appendProjectToList(project.getName());
+  return true;
+}
+
+function appendProjectToList(projectName) {
+  // Append and display project element to list in left-hand side menu
   const pListElement = DOMUtil.appendChildToParent('li', 'div');
   const pContainerElement = pListElement.firstChild;
   const pButton = document.createElement('button');
@@ -337,15 +282,18 @@ function validateTask() {
   pDeleteButton.textContent = 'X';
   pContainerElement.append(pDeleteButton);
 
-  pContainerElement.firstChild.textContent = project.getName();
+  pContainerElement.firstChild.textContent = projectName;
   pContainerElement.classList.add('project-buttons-container');
+
+  pContainerElement.firstChild.classList.add('project-button');
+  const pIcon = document.createElement('div');
+  pIcon.classList.add('project-icon');
+  pContainerElement.firstChild.insertBefore(pIcon, pContainerElement.firstChild.firstChild);
 
   elements.projectList.append(pListElement);
 
   //When a new Project is created, add a click listener to display tasks when clicked
   pButton.addEventListener('click', viewProjectTasks, false);
-
-  return true;
 }
 
 function viewProjectTasks(event) {
@@ -413,6 +361,47 @@ function restoreAddProjectButtonDisplay() {
 
   // No need to redo creation of add-project button, just restore add project event listener
   elements.addProjectButton.addEventListener('click', initAddProjectEvent);
+}
+
+function validateTask() {
+  //Store values in variables and check their validity
+  const taskName = document.getElementById('name').value;
+  const taskDueDate = document.getElementById('date').value;
+  const taskDescription = document.getElementById('description').value;
+  const taskPriority = [...document.getElementsByName('priority')].filter(element => {
+    return (element.checked === true) ? true : false;
+  });
+
+  const projectName = document.getElementById('task-list-header').textContent;
+  
+  const filteredTasks = todoListProjects.getProject(projectName).getTasks().filter(t => {
+    return (t.getName().trim() === taskName.trim()) ? true : false;
+  });
+
+  //Check for empty task name & duplicate task names
+  if (taskName === "" || taskName === undefined || taskName === null)
+    throw new UserException('Invalid Task title');
+  if (filteredTasks.length > 0)
+    throw new UserException('Duplicate Task title');
+  
+  //Check for empty Due Date
+  if (taskDueDate === "")
+    throw new UserException('Invalid Due Date');
+
+  //Check for unselected priority
+  if (taskPriority.length < 1)
+    throw new UserException('No priority is selected');
+
+  //Return newly created Task object with necessary information to instantiate a Task object
+  const newTask = {
+    title: taskName,
+    date: taskDueDate,
+    priority: taskPriority[0].value,
+    description: taskDescription,
+    projectname: projectName,
+  };
+
+  return newTask;
 }
 
 function removeCreatingNewTaskForm() {
