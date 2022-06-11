@@ -10,6 +10,9 @@
   font-family: openSans
   src: url('./OpenSans-VariableFont_wdth,wght.ttf')
 
+//#7db6d6, #0071af, #5ca4cc, #00659d, #006095, #59cea7, #31c292
+//#ec9090, #dfdfdf, #bebebe, 
+
 *, *::before, *::after
   box-sizing: border-box
   margin: 0
@@ -55,20 +58,20 @@ body
   position: relative
   left: 16px
   margin-right: auto
-
-.menu-icon:hover
   cursor: pointer
 
 .mid-section
   display: flex
+  color: #000033
+  font-size: 20px
 
 .left-menu
   display: flex
   flex-direction: column
-  width: 25%
+  min-width: 370px
   // #f3f3f3, #f4f4f4, #f1f5f8, #efedee, #f3efec, #ebeef0
   background-color: #f3f3f3
-  height: 100vh
+  height: calc(100vh - 85px)
   padding: 25px
   padding-top: 20px
 
@@ -79,10 +82,130 @@ body
   padding-right: 5%
   padding-top: 25px
 
+.add-icon
+  position: relative
+  left: 34px
+  bottom: 6px
+  margin-left: auto
+  background: url('./add-icon2-blue.svg')
+  background-size: 100%
+  background-repeat: no-repeat
+  height: 20px
+  width: 20px
+  cursor: pointer
+
+#add-project-button
+  text-align: right
+  width: 155px
+  background-color: #f3f3f3
+  border: none
+  border-radius: 10px
+  cursor: pointer
+
+.add-icon:hover + #add-project-button, #add-project-button:hover
+  // #ced3d6, #d0d6da
+  background-color: #d0d6da
+
+#project-list
+  list-style: none
+
+#project-list li
+  height: 49px
+
+.project-button
+  display: flex
+  height: 48px
+  padding-left: 4px
+  padding-bottom: 0px
+
+.project-task-count-icon
+  //border: 0.1px solid #000033
+  height: min-content
+  width: max-content
+  min-width: 17px
+  border-radius: 50%
+  text-align: center
+  background-color: #6ca4bc
+  color: white
+  font-size: 14px
+  margin-left: 6px
+  cursor: pointer
+  pointer-events: none
+  font-weight: bold
+
+.general
+  display: flex
+  height: 48px
+  padding-left: 4px
+  padding-bottom: 0px
+
+.project-icon
+  background: url('./project-icon.svg')
+  background-size: 100%
+  background-repeat: no-repeat
+  width: 48px
+  height: 32px
+  position: relative
+  left: 6px
+  bottom: 10px
+  cursor: pointer
+  pointer-events: none
+
+.projects-header-container
+  display: flex
+  justify-content: space-between
+  align-items: center
+
+#projects-list > li > div > button
+  border: none
 
 .projects
-  font-size: 28px
+  width: max-content
+  font-size: 30px
   padding-bottom: 10px
+
+.project-buttons-container
+  display: flex
+
+.project-buttons-container
+  button
+    border: none
+    border-radius: 10px
+    cursor: pointer
+    background-color: #f3f3f3
+  button:hover
+    background-color: #d0d6da
+
+label[for="create-project"]
+  min-width: 91px
+  align-self: center
+  font-size: 18px
+
+#create-project
+  border-radius: 10px
+
+.check-cancel-container
+  display: flex
+  width: 100%
+  justify-content: center
+  column-gap: 5px
+
+#create-on-add-project
+  //#a5eea5, #31c292, #59cea7, #13bcab, #003e3b, 
+  background-color: #a5eea5
+  font-size: 18px
+  border-radius: 10px
+  text-align: center
+  width: 100px
+  flex-grow: 2
+
+#cancel-on-add-project
+  //#d1000bb5, #ffb6b6, #ec9090
+  background-color: #ffb6b6
+  font-size: 18px
+  border-radius: 10px
+  text-align: center
+  width: 100px
 
 .delete-project
   width: 25px
@@ -102,22 +225,13 @@ body
 #on-add-project
   display: none
 
-.check-cancel-container
-  display: flex
-  justify-content: space-between
-  flex-wrap: nowrap
 
-#create-on-add-project
-  background-color: #a5eea5
 
-#cancel-on-add-project
-  background-color: #ffb6b6
 
-#create-project
-  width: 83%
 
 button, input
-  font-size: 18px
+  font-size: 20px
+  color: #000033
   text-align: left
   padding: 10px 20px
   margin-bottom: 10px
@@ -134,8 +248,17 @@ ul
   margin: 0
 
 .add-task
-  margin-top: 20px
   width: 140px
+  border: none
+  border-radius: 10px
+  background-color: white
+  margin-top: 20px
+  cursor: pointer
+
+.add-task:hover
+  background-color: #d0d6dac7
+
+
 
 .general-list-item
   display: none
@@ -156,7 +279,7 @@ ul
   height: 30px
   width: 28px
 
-.task-label-input
+.label-input
   display: flex
   column-gap: 10px
   margin-bottom: 10px
@@ -164,17 +287,16 @@ ul
 .task-label-input label
   min-width: max-content
 
-label[for="name"]
+label[for="name"], 
+label[for="date"]
   align-self: center
+  min-width: 79px
 
 input[type="text"]
   align-self: center
   height: 47px
   margin-bottom: 0px
   padding: 10px 14px
-
-label[for="date"]
-  align-self: center
 
 input[type="date"]
   align-self: center
@@ -215,18 +337,14 @@ textarea
   justify-content: space-between
   align-items: center
 
-.project-buttons-container
-  display: flex
-
 #task-list-header
 
 .add-task
 
-.general
 
 #task-list
-  
-#add-project-button
+
+
 
 .left-menu button
 
