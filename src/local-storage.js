@@ -9,6 +9,7 @@
   //Example: Project Object Converted to a String Object for saving into Local Storage
   let projectAsString = {
     name: general.getName(),
+    taskCount: general.getTaskCount().toString()
     tasks: {
       taskAsString,
       task2AsString
@@ -29,6 +30,7 @@
       [
         {
           "name":"General",
+          "taskCount": "0",
           "tasksAsStringObjects":[]
         }
       ]
@@ -39,10 +41,12 @@
       [
         {
           "name":"General",
+          "taskCount": "0",
           "tasksAsStringObjects":[]
         },
         {
           "name":"Hello",
+          "taskCount": "0",
           "tasksAsStringObjects":[]
         }
       ]
@@ -53,6 +57,7 @@
       [
         {
           "name":"General",
+          "taskCount": "1",
           "tasksAsStringObjects":
             [
               {
@@ -103,6 +108,7 @@ export function convertProjectToStringObject(project) {
 
   const projectAsString = {
     name: project.getName(),
+    taskCount: project.getTaskCount().toString(),
     tasksAsStringObjects
   };
   return projectAsString;
@@ -114,6 +120,8 @@ export function convertStringObjectToProject(projectStringObject) {
   projectStringObject.tasksAsStringObjects.forEach(t => {
     projectStringObjectAsProject.addTask(convertStringObjectToTask(t));
   });
+
+  projectStringObjectAsProject.setTaskCount(Number(projectStringObject.taskCount));
 
   return projectStringObjectAsProject;
 }
