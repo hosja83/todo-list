@@ -60,6 +60,9 @@ const elements = {
       - Separate the EventListeners into a separate file
       - Make sure to remove event listeners added to DOM elements when removing their
         elements to prevent memory leak issues
+      - Project dynamic id attribute values may become a problem if user creates a project
+        with the same name as an existing id in the HTML document like "on-add-project". highly
+        unlikely but may occurr. Potential bug that could break our app
 */
 
 //Load projectlist from localStorage, if null initialize empty project list
@@ -154,6 +157,9 @@ function addCancelCreatingNewTaskEventListener() {
 
   document.querySelector(".general-list-item").style.display = "list-item";
 
+  //Add unique identifier value, project name, to locate project easier for DOM manipulation
+  document.querySelector('.general').setAttribute('id', general.getName());
+
   //Init the X cancel span element with a click event listener that deletes general project
   const generalDelete = document.querySelector(".delete-project");
   generalDelete.setAttribute('onclick', 'deleteProject()');
@@ -189,8 +195,6 @@ function initAddTaskEvent() {
 
   // window is displayed with input formatted form entries
   document.querySelector(".task-form").style.display = 'block';
-
-  //make sure that projects cannot be selected 
 
   // user may click exit X button
   addCancelCreatingNewTaskEventListener();
@@ -233,10 +237,14 @@ function addNewTask(e) {
   todoListProjects.setProject(newTask.projectname, projectToUpdate);
   localStorage.setItem('projectList', JSON.stringify(LocalStorage.convertProjectListToStringObject(todoListProjects)));
 
-  // Populate the newTask in the list of tasks under the Project header
-  // Display Valid Task under project heading
-  const taskList = document.getElementById('task-list');
+  // Update task Count in left menu project list
+  const projectButtonElement = document.getElementById(newTask.projectname);
+  const projectTaskCountElement = projectButtonElement.querySelector('.project-task-count-icon');
+  projectTaskCountElement.textContent++;
 
+  // .......Populate the newTask in the list of tasks under the Project header
+  // .......Display Valid Task under project heading
+  const taskList = document.getElementById('task-list');
   const taskListItem = document.createElement('li');
   taskListItem.textContent = taskToBeAdded.getTaskInfo();
   taskList.appendChild(taskListItem);
@@ -290,6 +298,13 @@ function appendProjectToList(projectName) {
   pIcon.classList.add('project-icon');
   pContainerElement.firstChild.insertBefore(pIcon, pContainerElement.firstChild.firstChild);
 
+  const pTaskCount = document.createElement('div');
+  pTaskCount.classList.add('project-task-count-icon');
+  pTaskCount.textContent = todoListProjects.getProject(projectName).getTaskCount();
+  pContainerElement.firstChild.appendChild(pTaskCount);
+
+  pContainerElement.firstChild.setAttribute('id', projectName);
+
   elements.projectList.append(pListElement);
 
   //When a new Project is created, add a click listener to display tasks when clicked
@@ -297,8 +312,10 @@ function appendProjectToList(projectName) {
 }
 
 function viewProjectTasks(event) {
+  const projectName = event.target.getAttribute('id');
+  
   //First check if Project Tasks is already being displayed, therefore just return exit function
-  if (event.target.textContent === document.getElementById('task-list-header').textContent)
+  if (projectName === document.getElementById('task-list-header').textContent)
     return 'Project already displayed';
 
   //Clear current project's task View by deleting all childNodes
@@ -306,7 +323,6 @@ function viewProjectTasks(event) {
     DOMUtil.removeAllChildNodes(elements.taskList);
 
   //Change header name to current project name
-  const projectName = event.target.textContent;
   document.getElementById('task-list-header').textContent = projectName;
 
   //Check if project has any tasks, if not return
@@ -327,8 +343,7 @@ function viewProjectTasks(event) {
  * @param {Event} event event signaled or fired
  */
 function deleteProject(event) {
-  //Removes the last character from textContent, example 'GeneralX' becomes 'General'
-  const projectName = event.path[1].textContent.slice(0, -1);
+  const projectName = event.path[1].firstElementChild.getAttribute('id');
 
   //If project to delete is in process of adding a task from form, clear the new task form
   if (projectName === document.getElementById('task-list-header').textContent
@@ -343,7 +358,10 @@ function deleteProject(event) {
   }
 
   // Remove from DOM and it's viewProjectTasks event listener
+  // ..This may not be needed, plus event listener added on event.path[1].firstElementChild not
+  // ..event.path[2] which is list item
   event.path[2].removeEventListener('click', viewProjectTasks, false);
+
   todoListProjects.removeProject(projectName);
   event.path[2].remove();
 
