@@ -13,10 +13,13 @@ export default function Project(name) {
 
   this.name = name;
   this.tasks = new Array();
+  this.taskCount = 0;
 
   return Object.freeze(Object.seal({
     getName: () => {return this.name},
     getTasks: () => {return this.tasks},
+    getTaskCount: () => {return this.taskCount},
+    setTaskCount: (taskCount) => {this.taskCount = taskCount},
     setName: (name) => {this.name = name},
     addTask: (task) => {
       // This check doesn't work
@@ -27,6 +30,7 @@ export default function Project(name) {
           return 'duplicate';
       });
       this.tasks.push(task);
+      this.taskCount++;
       return true;
     },
     removeTask: (taskName) => {
@@ -38,6 +42,7 @@ export default function Project(name) {
           result = _.pullAt(this.tasks, [_indexOf(this.tasks, t)]); //returns array containing remove elements
         }
       });
+      if (istaskFound) this.taskCount--;
       return istaskFound ? result : 'task to be removed not found';
     },
   }));
@@ -52,9 +57,12 @@ export default function Project(name) {
  */
 export const projectFactory = (n) => {
   let tasks = new Array();
+  let taskCount = 0;
   return Object.freeze(Object.seal({
     getName: () => {return n},
     getTasks: () => {return tasks},
+    getTaskCount: () => {return taskCount},
+    setTaskCount: (newTaskCount) => {taskCount = newTaskCount},
     setName: (newName) => {n = newName},
     addTask: (newTask) => {
       // This check doesn't work
@@ -65,6 +73,7 @@ export const projectFactory = (n) => {
           return 'duplicate';
       });
       tasks.push(newTask);
+      taskCount++;
       return true;
     },
     removeTask: (taskName) => {
@@ -76,6 +85,7 @@ export const projectFactory = (n) => {
           result = _pullAt(tasks, [_indexOf(tasks, t)]); //returns array containing remove elements
         }
       });
+      if (istaskFound) taskCount--;
       return istaskFound ? result : 'task to be removed not found';
     },
   }));
