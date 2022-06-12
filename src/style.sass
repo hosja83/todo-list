@@ -117,11 +117,13 @@ body
   height: 48px
   padding-left: 4px
   padding-bottom: 0px
+  margin-right: -46px
+  padding-right: 39px
 
 .project-task-count-icon
   //border: 0.1px solid #000033
   height: min-content
-  width: max-content
+  width: fit-content
   min-width: 17px
   border-radius: 50%
   text-align: center
@@ -138,6 +140,8 @@ body
   height: 48px
   padding-left: 4px
   padding-bottom: 0px
+  margin-right: -46px
+  padding-right: 39px
 
 .project-icon
   background: url('./project-icon.svg')
@@ -167,14 +171,32 @@ body
 .project-buttons-container
   display: flex
 
-.project-buttons-container
-  button
-    border: none
-    border-radius: 10px
-    cursor: pointer
-    background-color: #f3f3f3
-  button:hover
-    background-color: #d0d6da
+.project-buttons-container .general
+  border: none
+  border-radius: 10px
+  cursor: pointer
+  background-color: #f3f3f3
+
+.project-buttons-container .project-button
+  border: none
+  border-radius: 10px
+  cursor: pointer
+  background-color: #f3f3f3
+
+.project-buttons-container .delete-project
+  border: none
+  border-radius: 10px
+  cursor: pointer
+  background-color: #f3f3f3
+
+.project-button:hover,
+.general:hover,
+.general:hover + .delete-project, 
+.project-button:hover + .delete-project,
+.delete-project:hover
+  background-color: #d0d6da
+///CSS hard to style a previous sibling
+//.project-buttons-container button:not(.project-buttons-contaier .project-button ~ button):hover
 
 label[for="create-project"]
   min-width: 91px
@@ -207,10 +229,59 @@ label[for="create-project"]
   text-align: center
   width: 100px
 
-.delete-project
-  width: 25px
-  height: 60px
+
+
+
+//using background property
+.project-3dot-icon
+  // width: 100px
+  // height: 100px
+  // background-image: radial-gradient(circle, black 10px, transparent 11px)
+  // background-size: 100% 33.33%
+
+//using shadow property
+.project-3dot-icon
+  width: 4px
+  height: 4px
+  border-radius: 50%
+  background-color: #000033
+  box-shadow: 0px 8px 0px #000033, 0px 16px 0px #000033
+  position: relative
+  top: 1px
+
+//using pseudo elements
+.project-3dot-icon
+  // position: relative
+  // width: 20px
+  // height: 20px
+  // background-color: black
+  // border-radius: 50%
+
+// project-3dot-icon:before, project-3dot-icon:after
+//   content: ""
+//   position: absolute
+//   width: 100%
+//   height: 100%
+//   left: 0px
+//   background-color: inherit
+//   border-radius: inherit
+
+// project-3dot-icon:before
+//   top: 40px
+
+// project-3dot-icon:after
+//   top: 80px
+
+
+
+
+.delete-project 
+  width: 46px
   text-align: center
+  display: flex
+  padding-left: 0px
+  padding-bottom: 0px
+  justify-content: end
   
 .cancel-task
   float: right
@@ -224,10 +295,6 @@ label[for="create-project"]
 
 #on-add-project
   display: none
-
-
-
-
 
 button, input
   font-size: 20px
