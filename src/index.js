@@ -49,6 +49,11 @@ const elements = {
    - Implement a toggle button on the top right hand corner of page switch between light-colored,
      colored, to dark mode
    - Implement a search bar for Tasks
+   - Implement a popup div that displays a message upon project creation, deletion or task
+     creation or deletion for a limited interval of time then dissappears. You can also have an
+     undo button attached to this message to revert back to original state before action. This
+     requires a click event handler that will undo whatever change occurred.
+   - Implement a settings icon top right that can adjust certain features to user's liking
 
    - Requirements to consider changing, make duplicate Tasks allowable so user can organize 
      reoccurring tasks within same project.
@@ -250,7 +255,6 @@ function addNewTask(e) {
   taskList.appendChild(taskListItem);
 }
 
-
 /**
  * Adds a newly created project to the project list and restores view of left menu
  * @returns 'Duplicate' if element is duplicate, false if blank project, or true if project
@@ -287,7 +291,10 @@ function appendProjectToList(projectName) {
   pDeleteButton.classList.add('delete-project');
   pDeleteButton.setAttribute('onclick', 'deleteProject()');
   pDeleteButton.onclick = deleteProject;
-  pDeleteButton.textContent = 'X';
+
+  const threeDotIcon = document.createElement('div');
+  threeDotIcon.classList.add('project-3dot-icon');
+  pDeleteButton.appendChild(threeDotIcon);
   pContainerElement.append(pDeleteButton);
 
   pContainerElement.firstChild.textContent = projectName;
