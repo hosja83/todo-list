@@ -75,7 +75,7 @@ body
 
 .todo-content
   background-color: white
-  width: 100%
+  width: calc(100% - 370px)
   padding-left: 5%
   padding-right: 5%
   padding-top: 25px
@@ -431,6 +431,8 @@ textarea
   text-align: center
   border-radius: 10px
   font-size: 18px
+  font-size: 20px
+  padding: 8px
   
 
 .header-add-task-container
@@ -490,7 +492,7 @@ textarea
 
 .task-checkbox 
   height: 18px
-  width: 18px
+  min-width: 18px
   border: 1px solid #5c605c
   border-radius: 3px
   margin-right: 5px
@@ -499,6 +501,12 @@ textarea
   cursor: pointer
 
 .task-title
+  height: 26px
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+  width: 100%
+
 
 .task-date
   margin-left: auto
