@@ -36,6 +36,19 @@ export function setAttributes(element, attributes) {
 }
 
 /**
+ * Set the given element's attributes that are given along with their values structured as 
+ * an object with key-value pairs with the given namespace.
+ * 
+ * @param {String} namespace String specifying the namespace of the attribute
+ * @param {DOM Element} element DOM element to set attributes
+ * @param {Object} attributes key value pairs containing attributes and their values to set
+ */
+export function setAttributesNS(namespace, element, attributes) {
+  for (const key in attributes)
+    element.setAttributesNS(namespace, key, attributes[key]);
+}
+
+/**
  * Appends an arbitrary collection of given children that represent HTML Elements to a
  * parent HTML Element.
  * 
