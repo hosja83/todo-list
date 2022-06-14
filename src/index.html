@@ -16,7 +16,11 @@
 
   <body>
     <div class="top-section">
-      <div class="menu-icon"></div>
+      <div class="menu-icon">
+        <svg height="45px" width="35px" viewBox="0 0 24 24"xmlns="http://www.w3.org/2000/svg">
+          <path class="heroicon-ui" d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"></path>
+        </svg>
+      </div>
       <div class="header-logo"></div>
       <div class="header">ToDo List</div>
     </div>
@@ -43,7 +47,7 @@
           <li class="general-list-item">
             <div class="project-buttons-container">
               <button class="general"><div class="project-icon"></div>General<div class="project-task-count-icon">0</div></button>
-              <button class="delete-project" onclick="deleteProject(event)"><div class="project-3dot-icon"></div></span>
+              <button class="project-more-options" onclick="displayProjectMoreOptions(event)"><div class="project-3dot-icon"></div></button>
             </div>
           </li>
         </ul>
@@ -51,6 +55,18 @@
       <div class="todo-content">
         <div class="header-add-task-container">
           <h1 id="task-list-header">General</h1>
+          <?xml version="1.0" encoding="utf-8"?>
+          <svg class="add-task-icon" height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+            <defs>
+              <style>.cls-1{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style>
+            </defs>
+            <title />
+            <g id="_8.add">
+              <circle class="cls-1" cx="12" cy="12" r="11" style="fill-rule: nonzero; fill: #437798; stroke:  #437798;" />
+              <line class="cls-1" x1="12" x2="12" y1="6" y2="18" style="fill-rule: nonzero; fill: white; stroke: white; stroke-width: 2.5;" bx:origin="0 0.5" />
+              <line class="cls-1" x1="18" x2="6" y1="12" y2="12" style="fill-rule: nonzero; fill: white; stroke: white; stroke-width: 2.5;" transform="matrix(1, 0, 0, 1, 0.000005, -0.000005)" bx:origin="0.5 0" />
+            </g>
+          </svg>
           <button type="button" class="add-task">Add Task</button>
         </div>
         <div class="task-form">
@@ -85,6 +101,33 @@
           </form>
         </div>
         <ul id="task-list">
+
+          <!-- <li class="task-item">
+            <div class="task-container">
+              <div class="task-checkbox"></div>
+              <div class="task-title">Task Title</div>
+              <div class="task-date">99/99/9999</div>
+              <div class="task-flag-priority">
+                <?xml version="1.0" encoding="utf-8"?>
+                <svg height="34px" width="34px" id="Layer_1" version="1.1" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                  <g><path d="M368,112c-11,1.4-24.9,3.5-39.7,3.5c-23.1,0-44-5.7-65.2-10.2c-21.5-4.6-43.7-9.3-67.2-9.3c-46.9,0-62.8,10.1-64.4,11.2   l-3.4,2.4v2.6v161.7V416h16V272.7c6-2.5,21.8-6.9,51.9-6.9c21.8,0,42.2,8.3,63.9,13c22,4.7,44.8,9.6,69.5,9.6   c14.7,0,27.7-2,38.7-3.3c6-0.7,11.3-1.4,16-2.2V126v-16.5C379.4,110.4,374,111.2,368,112z"></path></g>
+                </svg>
+              </div>
+              <div class="task-edit">
+                <?xml version="1.0" encoding="utf-8"?>
+                <svg height="24px" width="24px" id="Layer_1" version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M21.635,6.366c-0.467-0.772-1.043-1.528-1.748-2.229c-0.713-0.708-1.482-1.288-2.269-1.754L19,1C19,1,21,1,22,2S23,5,23,5  L21.635,6.366z M10,18H6v-4l0.48-0.48c0.813,0.385,1.621,0.926,2.348,1.652c0.728,0.729,1.268,1.535,1.652,2.348L10,18z M20.48,7.52  l-8.846,8.845c-0.467-0.771-1.043-1.529-1.748-2.229c-0.712-0.709-1.482-1.288-2.269-1.754L16.48,3.52  c0.813,0.383,1.621,0.924,2.348,1.651C19.557,5.899,20.097,6.707,20.48,7.52z M4,4v16h16v-7l3-3.038V21c0,1.105-0.896,2-2,2H3  c-1.104,0-2-0.895-2-2V3c0-1.104,0.896-2,2-2h11.01l-3.001,3H4z"/>
+                </svg>
+              </div>
+              <div class="task-trash">
+                <?xml version="1.0" encoding="utf-8"?>
+                <svg height="23px" width="23px" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M32 464C32 490.5 53.5 512 80 512h288c26.5 0 48-21.5 48-48V128H32V464zM304 208C304 199.1 311.1 192 320 192s16 7.125 16 16v224c0 8.875-7.125 16-16 16s-16-7.125-16-16V208zM208 208C208 199.1 215.1 192 224 192s16 7.125 16 16v224c0 8.875-7.125 16-16 16s-16-7.125-16-16V208zM112 208C112 199.1 119.1 192 128 192s16 7.125 16 16v224C144 440.9 136.9 448 128 448s-16-7.125-16-16V208zM432 32H320l-11.58-23.16c-2.709-5.42-8.25-8.844-14.31-8.844H153.9c-6.061 0-11.6 3.424-14.31 8.844L128 32H16c-8.836 0-16 7.162-16 16V80c0 8.836 7.164 16 16 16h416c8.838 0 16-7.164 16-16V48C448 39.16 440.8 32 432 32z"/>
+                </svg>
+              </div>
+            </div>
+          </li> -->
+
         </ul>
       </div>
     </div>
