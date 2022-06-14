@@ -20,6 +20,9 @@ const elements = {
   taskList: document.getElementById('task-list'),
 }
 
+let isProjectMoreOptionsDropdownDisplayed = false;
+let projectNameWhereMoreOptionsDropdownDisplayed = undefined;
+
 /*
   Features To Implement in Future:
    - Inbox
@@ -54,6 +57,7 @@ const elements = {
      undo button attached to this message to revert back to original state before action. This
      requires a click event handler that will undo whatever change occurred.
    - Implement a settings icon top right that can adjust certain features to user's liking
+   - Implement animations on svg icons and other elements such as checkboxes on Tasks
 
    - Requirements to consider changing, make duplicate Tasks allowable so user can organize 
      reoccurring tasks within same project.
@@ -151,6 +155,21 @@ function addCancelCreatingNewTaskEventListener() {
 }
 
 /**
+ * Add event listener for handling clicks outside of project more options dropdown anywhere 
+ * in the body which will cause the dropdown to dissappear or display: none.
+ */
+function addDocumentClearProjectMoreOptionsDropdownEventListener() {
+  document.body.addEventListener('click', clearProjectMoreOptionsDropdownDisplay, false);
+}
+
+/**
+ * Removes event listener used for handling clicks outside of project more options dropdown.
+ */
+function removeDocumentClearProjectMoreOptionsDropdownEventListener() {
+  document.body.removeEventListener('click', clearProjectMoreOptionsDropdownDisplay, false);
+}
+
+/**
  * Initialize project list and returns a ProjectList object that contains the default General project.
  * @returns ProjectList object that contains the default General project
  */
@@ -166,9 +185,10 @@ function addCancelCreatingNewTaskEventListener() {
   document.querySelector('.general').setAttribute('id', general.getName());
 
   //Init the X cancel span element with a click event listener that deletes general project
-  const generalDelete = document.querySelector(".delete-project");
-  generalDelete.setAttribute('onclick', 'deleteProject()');
-  generalDelete.onclick = deleteProject;
+  //... ... ...We need to add more options event handling here
+  const projectMoreOptions = document.querySelector('.project-more-options');
+  projectMoreOptions.setAttribute('onclick', 'displayProjectMoreOptions()');
+  projectMoreOptions.onclick = displayProjectMoreOptions;
 
   todoListProjects = projects;
   localStorage.setItem('projectList', JSON.stringify(LocalStorage.convertProjectListToStringObject(todoListProjects)));
@@ -247,145 +267,91 @@ function addNewTask(e) {
   const projectTaskCountElement = projectButtonElement.querySelector('.project-task-count-icon');
   projectTaskCountElement.textContent++;
 
-  // .......Populate the newTask in the list of tasks under the Project header
-  // .......Display Valid Task under project heading
+  //Populate and display the newTask in the list of tasks under the Project header
   const taskList = document.getElementById('task-list');
+
   const taskListItem = document.createElement('li');
-  taskListItem.textContent = taskToBeAdded.getTaskInfo();
-  taskList.appendChild(taskListItem);
-}
+  taskListItem.classList.add('task-item');
 
-/**
- * Adds a newly created project to the project list and restores view of left menu
- * @returns 'Duplicate' if element is duplicate, false if blank project, or true if project
- *          added successfully
- */
- function addProject() {
-  if (elements.addProjectInput.value === "") {
-    alert("Project name cannot be blank");
-    return false;
-  }
+  const taskContainer = document.createElement('div');
+  taskContainer.classList.add('task-container');
 
-  const project = new Project(elements.addProjectInput.value);
+  const taskCheckbox = document.createElement('div');
+  taskCheckbox.classList.add('task-checkbox');
 
-  if (todoListProjects.addProject(project) === "Duplicate") 
-    return 'Duplicate'; //alert is handled in project-list object
-  
-  localStorage.setItem('projectList', JSON.stringify(LocalStorage.convertProjectListToStringObject(todoListProjects)));
+  const taskTitle = document.createElement('div');
+  taskTitle.classList.add('task-title');
+  taskTitle.textContent = newTask.title.trim();
 
-  // Call cancel event handler function to remove input and create/cancel buttons
-  restoreAddProjectButtonDisplay();
+  const taskDate = document.createElement('div');
+  taskDate.classList.add('task-date');
+  taskDate.textContent = newTask.date
 
-  appendProjectToList(project.getName());
-  return true;
-}
-
-function appendProjectToList(projectName) {
-  // Append and display project element to list in left-hand side menu
-  const pListElement = DOMUtil.appendChildToParent('li', 'div');
-  const pContainerElement = pListElement.firstChild;
-  const pButton = document.createElement('button');
-  pContainerElement.appendChild(pButton);
-  
-  const pDeleteButton = document.createElement('button');
-  pDeleteButton.classList.add('delete-project');
-  pDeleteButton.setAttribute('onclick', 'deleteProject()');
-  pDeleteButton.onclick = deleteProject;
-
-  const threeDotIcon = document.createElement('div');
-  threeDotIcon.classList.add('project-3dot-icon');
-  pDeleteButton.appendChild(threeDotIcon);
-  pContainerElement.append(pDeleteButton);
-
-  pContainerElement.firstChild.textContent = projectName;
-  pContainerElement.classList.add('project-buttons-container');
-
-  pContainerElement.firstChild.classList.add('project-button');
-  const pIcon = document.createElement('div');
-  pIcon.classList.add('project-icon');
-  pContainerElement.firstChild.insertBefore(pIcon, pContainerElement.firstChild.firstChild);
-
-  const pTaskCount = document.createElement('div');
-  pTaskCount.classList.add('project-task-count-icon');
-  pTaskCount.textContent = todoListProjects.getProject(projectName).getTaskCount();
-  pContainerElement.firstChild.appendChild(pTaskCount);
-
-  pContainerElement.firstChild.setAttribute('id', projectName);
-
-  elements.projectList.append(pListElement);
-
-  //When a new Project is created, add a click listener to display tasks when clicked
-  pButton.addEventListener('click', viewProjectTasks, false);
-}
-
-function viewProjectTasks(event) {
-  const projectName = event.target.getAttribute('id');
-  
-  //First check if Project Tasks is already being displayed, therefore just return exit function
-  if (projectName === document.getElementById('task-list-header').textContent)
-    return 'Project already displayed';
-
-  //Clear current project's task View by deleting all childNodes
-  if (elements.taskList.hasChildNodes)
-    DOMUtil.removeAllChildNodes(elements.taskList);
-
-  //Change header name to current project name
-  document.getElementById('task-list-header').textContent = projectName;
-
-  //Check if project has any tasks, if not return
-  if (todoListProjects.getProject(projectName).getTasks().length === 0)
-    return 'Project does not contain any Tasks';
-
-  //Populate task list with current project
-  todoListProjects.getProject(projectName).getTasks().forEach(t => {
-    //...We need to change this to a better design for displaying Tasks
-    const taskListItem = document.createElement('li');
-    taskListItem.textContent = t.getTaskInfo();
-    elements.taskList.appendChild(taskListItem);
+  const taskFlagPriority = document.createElement('div');
+  taskFlagPriority.classList.add('task-flag-priority');// "yyyy-mm-dd"
+  taskFlagPriority.textContent = newTask.date.slice(0, 4) + '/' + newTask.date.slice(5, 7) + '/' +
+                                 newTask.date.slice(8, 10);
+  //add flag svg
+  const flagSVG = document.createElement('svg');
+  const flagG = document.createElement('g');
+  const flagPath = document.createElement('path');
+  DOMUtil.setAttributes(flagSVG, {
+    "height": "34px",
+    "width": "34px",
+    "id": "Layer_1",
+    "version": "1.1",
+    "viewBox": "0 0 512 512",
+    "xmlns": "http://www.w3.org/2000/svg",
   });
-}
+  flagPath.setAttribute('d', "M368,112c-11,1.4-24.9,3.5-39.7,3.5c-23.1,0-44-5.7-65.2-10.2c-21.5-4.6-43.7-9.3-67.2-9.3c-46.9,0-62.8,10.1-64.4,11.2   l-3.4,2.4v2.6v161.7V416h16V272.7c6-2.5,21.8-6.9,51.9-6.9c21.8,0,42.2,8.3,63.9,13c22,4.7,44.8,9.6,69.5,9.6   c14.7,0,27.7-2,38.7-3.3c6-0.7,11.3-1.4,16-2.2V126v-16.5C379.4,110.4,374,111.2,368,112z");
+  taskFlagPriority.appendChild(flagSVG).appendChild(flagG).appendChild(flagPath);
 
-/**
- * Deletes the project that fired off this event, removing it from the project lists and HTML DOM.
- * @param {Event} event event signaled or fired
- */
-function deleteProject(event) {
-  const projectName = event.path[1].firstElementChild.getAttribute('id');
-
-  //If project to delete is in process of adding a task from form, clear the new task form
-  if (projectName === document.getElementById('task-list-header').textContent
-      && document.querySelector('.task-form').style.display === 'block') {
-    removeCreatingNewTaskForm();
+  //If normal green, if high yellow, if low silver
+  switch(newTask.priority) {
+    case "High":
+      taskFlagPriority.style.fill = '#ffef00';
+      break;
+    case "Normal":
+      taskFlagPriority.style.fill = 'rgb(49, 194, 146)';
+      break;
+    case "Low":
+      taskFlagPriority.style.fill = '#eceff1';
+      break;
   }
 
-  // If this project is currently displayed, remove it from view
-  if (projectName === document.getElementById('task-list-header').textContent) {
-    document.getElementById('task-list-header').textContent = "";
-    DOMUtil.removeAllChildNodes(elements.taskList);
-  }
+  const taskEdit = document.createElement('div');
+  taskEdit.classList.add('task-edit');
+  //add task edit svg
+  const editSVG = document.createElement('svg');
+  const editPath = document.createElement('path');
+  DOMUtil.setAttributes(editSVG, {
+    "height": "24px",
+    "width": "24px",
+    "id": "Layer_1",
+    "version": "1.1",
+    "viewBox": "0 0 24 24",
+    "xmlns": "http://www.w3.org/2000/svg",
+  });
+  editPath.setAttribute('d', "M21.635,6.366c-0.467-0.772-1.043-1.528-1.748-2.229c-0.713-0.708-1.482-1.288-2.269-1.754L19,1C19,1,21,1,22,2S23,5,23,5  L21.635,6.366z M10,18H6v-4l0.48-0.48c0.813,0.385,1.621,0.926,2.348,1.652c0.728,0.729,1.268,1.535,1.652,2.348L10,18z M20.48,7.52  l-8.846,8.845c-0.467-0.771-1.043-1.529-1.748-2.229c-0.712-0.709-1.482-1.288-2.269-1.754L16.48,3.52  c0.813,0.383,1.621,0.924,2.348,1.651C19.557,5.899,20.097,6.707,20.48,7.52z M4,4v16h16v-7l3-3.038V21c0,1.105-0.896,2-2,2H3  c-1.104,0-2-0.895-2-2V3c0-1.104,0.896-2,2-2h11.01l-3.001,3H4z");
+  taskEdit.appendChild(editSVG).appendChild(editPath);
 
-  // Remove from DOM and it's viewProjectTasks event listener
-  // ..This may not be needed, plus event listener added on event.path[1].firstElementChild not
-  // ..event.path[2] which is list item
-  event.path[2].removeEventListener('click', viewProjectTasks, false);
+  const taskTrash = document.createElement('div');
+  taskTrash.classList.add('task-trash');
+  //add task Trash svg
+  const trashSVG = document.createElement('svg');
+  const trashPath = document.createElement('path');
+  DOMUtil.setAttributes(trashSVG, {
+    "height": "23px",
+    "width": "23px",
+    "viewBox": "0 0 448 512",
+    "xmlns": "http://www.w3.org/2000/svg",
+  });
+  trashPath.setAttribute('d', "M32 464C32 490.5 53.5 512 80 512h288c26.5 0 48-21.5 48-48V128H32V464zM304 208C304 199.1 311.1 192 320 192s16 7.125 16 16v224c0 8.875-7.125 16-16 16s-16-7.125-16-16V208zM208 208C208 199.1 215.1 192 224 192s16 7.125 16 16v224c0 8.875-7.125 16-16 16s-16-7.125-16-16V208zM112 208C112 199.1 119.1 192 128 192s16 7.125 16 16v224C144 440.9 136.9 448 128 448s-16-7.125-16-16V208zM432 32H320l-11.58-23.16c-2.709-5.42-8.25-8.844-14.31-8.844H153.9c-6.061 0-11.6 3.424-14.31 8.844L128 32H16c-8.836 0-16 7.162-16 16V80c0 8.836 7.164 16 16 16h416c8.838 0 16-7.164 16-16V48C448 39.16 440.8 32 432 32z");
+  taskTrash.appendChild(trashSVG).appendChild(trashPath);
 
-  todoListProjects.removeProject(projectName);
-  event.path[2].remove();
-
-  localStorage.setItem('projectList', JSON.stringify(LocalStorage.convertProjectListToStringObject(todoListProjects)));
-}
-
-/**
- * Handles an event where user clicks on the cancel button when creating a new project by
- * restoring the previous display of add project button without the text input form.
- */
-function restoreAddProjectButtonDisplay() {
-  // Hides and input and create/cancel display takes no space
-  elements.addProjectInput.value = "";
-  elements.addProjectInputContainer.style.display = "none";
-
-  // No need to redo creation of add-project button, just restore add project event listener
-  elements.addProjectButton.addEventListener('click', initAddProjectEvent);
+  //Append Task list item and Task container content to the Task list
+  taskList.appendChild(taskListItem).appendChild(taskContainer);
+  DOMUtil.appendChildren(taskContainer, [taskCheckbox, taskTitle, taskDate, taskFlagPriority, taskEdit, taskTrash]);
 }
 
 function validateTask() {
@@ -427,6 +393,243 @@ function validateTask() {
   };
 
   return newTask;
+}
+
+/**
+ * Adds a newly created project to the project list and restores view of left menu
+ * @returns 'Duplicate' if element is duplicate, false if blank project, or true if project
+ *          added successfully
+ */
+ function addProject() {
+  if (elements.addProjectInput.value === "") {
+    alert("Project name cannot be blank");
+    return false;
+  }
+
+  const project = new Project(elements.addProjectInput.value);
+
+  if (todoListProjects.addProject(project) === "Duplicate") 
+    return 'Duplicate'; //alert is handled in project-list object
+  
+  localStorage.setItem('projectList', JSON.stringify(LocalStorage.convertProjectListToStringObject(todoListProjects)));
+
+  // Call cancel event handler function to remove input and create/cancel buttons
+  restoreAddProjectButtonDisplay();
+
+  appendProjectToList(project.getName());
+  return true;
+}
+
+function appendProjectToList(projectName) {
+  // Append and display project element to list in left-hand side menu
+  const pListElement = DOMUtil.appendChildToParent('li', 'div');
+  const pContainerElement = pListElement.firstChild;
+  const pButton = document.createElement('button');
+  pContainerElement.appendChild(pButton);
+
+  const projectMoreOptionsButton = document.createElement('button');
+  projectMoreOptionsButton.classList.add('project-more-options');
+
+  const threeDotIcon = document.createElement('div');
+  threeDotIcon.classList.add('project-3dot-icon');
+  projectMoreOptionsButton.appendChild(threeDotIcon);
+  pContainerElement.appendChild(projectMoreOptionsButton);
+  projectMoreOptionsButton.addEventListener('click', displayProjectMoreOptions, false);
+
+  pContainerElement.firstChild.textContent = projectName;
+  pContainerElement.classList.add('project-buttons-container');
+
+  pContainerElement.firstChild.classList.add('project-button');
+  const pIcon = document.createElement('div');
+  pIcon.classList.add('project-icon');
+  pContainerElement.firstChild.insertBefore(pIcon, pContainerElement.firstChild.firstChild);
+
+  const pTaskCount = document.createElement('div');
+  pTaskCount.classList.add('project-task-count-icon');
+  pTaskCount.textContent = todoListProjects.getProject(projectName).getTaskCount();
+  pContainerElement.firstChild.appendChild(pTaskCount);
+
+  pContainerElement.firstChild.setAttribute('id', projectName);
+
+  elements.projectList.appendChild(pListElement);
+
+  //When a new Project is created, add a click listener to display tasks when clicked
+  pButton.addEventListener('click', viewProjectTasks, false);
+}
+
+function viewProjectTasks(event) {
+  const projectName = event.target.getAttribute('id');
+  
+  //First check if Project Tasks is already being displayed, therefore just return exit function
+  if (projectName === document.getElementById('task-list-header').textContent)
+    return 'Project already displayed';
+
+  //Clear current project's task View by deleting all childNodes
+  if (elements.taskList.hasChildNodes)
+    DOMUtil.removeAllChildNodes(elements.taskList);
+
+  //Change header name to current project name
+  document.getElementById('task-list-header').textContent = projectName;
+
+  //Check if project has any tasks, if not return
+  if (todoListProjects.getProject(projectName).getTasks().length === 0)
+    return 'Project does not contain any Tasks';
+
+  //Populate task list with current project
+  todoListProjects.getProject(projectName).getTasks().forEach(t => {
+    //...We need to change this to a better design for displaying Tasks
+    const taskListItem = document.createElement('li');
+    taskListItem.textContent = t.getTaskInfo();
+    elements.taskList.appendChild(taskListItem);
+  });
+}
+
+/**
+ * Display project more options dropdown menu which contains rename & delete project operations.
+ */
+ function displayProjectMoreOptions(event) {
+  const projectName = event.path[1].firstElementChild.getAttribute('id');
+  
+  // Check first if project more options is already there displayed as none or display
+  // Update flags used by body click event listener & add/remove listener based on display prop
+  if (event.path[1].childElementCount >= 3) {
+    if (event.path[1].lastElementChild.style.display === "none") {
+      //Before displaying a new dropdown check to see if one exits, clear if true
+      if (isProjectMoreOptionsDropdownDisplayed)
+        clearDuplicateProjectMoreOptionsDropdownDisplay();
+      event.path[1].lastElementChild.style.display = "block";
+      isProjectMoreOptionsDropdownDisplayed = true;
+      projectNameWhereMoreOptionsDropdownDisplayed = projectName;
+      addDocumentClearProjectMoreOptionsDropdownEventListener();
+    } else {
+      event.path[1].lastElementChild.style.display = "none";
+      isProjectMoreOptionsDropdownDisplayed = false;
+      projectNameWhereMoreOptionsDropdownDisplayed = undefined;
+      removeDocumentClearProjectMoreOptionsDropdownEventListener();
+    }
+    return;
+  }
+
+  const projectDropdownContainer = document.createElement('div');
+  projectDropdownContainer.classList.add('project-dropdown-container');
+
+  const projectDropdownContent = document.createElement('div');
+  projectDropdownContent.classList.add('project-dropdown-content');
+
+  const renameButton = document.createElement('button');
+  renameButton.classList.add('rename-item');
+  renameButton.textContent = "Rename";
+
+  const deleteButton = document.createElement('delete');
+  deleteButton.classList.add('delete-item');
+  deleteButton.textContent = "Delete"
+
+  projectDropdownContent.appendChild(renameButton);
+  projectDropdownContent.appendChild(deleteButton);
+  projectDropdownContainer.appendChild(projectDropdownContent);
+
+  //... ... ...Rename event listener, needs implementation
+  renameButton.setAttribute('onclick', 'initRenameProjectEvent()');
+  renameButton.onclick = initRenameProjectEvent;
+
+  deleteButton.setAttribute('onclick', 'deleteProject()');
+  deleteButton.onclick = deleteProject;
+
+  //Set unique id attribute for our unique project dropdown
+  //..........Throwing null reference sometimes, look into bug fix
+  projectDropdownContainer.setAttribute('id', projectName.concat("-more-options-dropdown"));   
+
+  //Append dropdown more options to DOM 
+  //Update flags used by body click event listener & add/remove listener based on display prop
+  //Before displaying a new dropdown check to see if one exits, clear if true
+  if (isProjectMoreOptionsDropdownDisplayed)
+    clearDuplicateProjectMoreOptionsDropdownDisplay();
+  event.path[1].appendChild(projectDropdownContainer);
+  isProjectMoreOptionsDropdownDisplayed =  true;
+  projectNameWhereMoreOptionsDropdownDisplayed = projectName;
+  addDocumentClearProjectMoreOptionsDropdownEventListener();
+}
+
+function clearDuplicateProjectMoreOptionsDropdownDisplay() {
+  const projectButton = document.getElementById(projectNameWhereMoreOptionsDropdownDisplayed);
+  projectButton.parentElement.lastElementChild.style.display = 'none';
+}
+
+function clearProjectMoreOptionsDropdownDisplay(event) {
+  if (isProjectMoreOptionsDropdownDisplayed) {
+    //Check to see if event.target is coming from 3dot icon or delete or rename buttons
+    const eventTargetClassName = event.target.getAttribute('class');
+    if (eventTargetClassName !== 'project-more-options' &&
+        eventTargetClassName !== 'rename-item' &&
+        eventTargetClassName !== 'delete-item') {
+      //Find dropdown project display container using project name used as id attribute value
+      const projectButton = document.getElementById(projectNameWhereMoreOptionsDropdownDisplayed);
+      projectButton.parentElement.lastElementChild.style.display = 'none';
+    }
+  }
+}
+
+/**
+ * Renames the project that fired off this event
+ * @param {Event} event event signaled or fired
+ */
+function initRenameProjectEvent(event) {
+  // Remove project more options dropdown display 
+  // Update flags used by body click event listener & add/remove listener based on display prop
+  event.path[2].style.display = 'none';
+  isProjectMoreOptionsDropdownDisplayed = false;
+  projectNameWhereMoreOptionsDropdownDisplayed = undefined;
+  removeDocumentClearProjectMoreOptionsDropdownEventListener();
+}
+
+/**
+ * Deletes the project that fired off this event, removing it from the project lists and HTML DOM.
+ * @param {Event} event event signaled or fired
+ */
+function deleteProject(event) {
+  // Remove project more options dropdown display
+  // Update flags used by body click event listener & add/remove listener based on display prop
+  event.path[2].style.display = 'none';
+  isProjectMoreOptionsDropdownDisplayed = false;
+  projectNameWhereMoreOptionsDropdownDisplayed = undefined;
+  removeDocumentClearProjectMoreOptionsDropdownEventListener();
+
+  const projectName = event.path[3].firstElementChild.getAttribute('id');
+
+  //If project to delete is in process of adding a task from form, clear the new task form
+  if (projectName === document.getElementById('task-list-header').textContent
+      && document.querySelector('.task-form').style.display === 'block') {
+    removeCreatingNewTaskForm();
+  }
+
+  // If this project is currently displayed, remove it from view
+  if (projectName === document.getElementById('task-list-header').textContent) {
+    document.getElementById('task-list-header').textContent = "";
+    DOMUtil.removeAllChildNodes(elements.taskList);
+  }
+
+  // Remove from DOM and it's viewProjectTasks event listener
+  // ..This may not be needed, plus event listener added on event.path[3].firstElementChild not
+  // ..event.path[4] which is list item
+  event.path[3].firstElementChild.removeEventListener('click', viewProjectTasks, false);
+
+  todoListProjects.removeProject(projectName);
+  event.path[4].remove();
+
+  localStorage.setItem('projectList', JSON.stringify(LocalStorage.convertProjectListToStringObject(todoListProjects)));
+}
+
+/**
+ * Handles an event where user clicks on the cancel button when creating a new project by
+ * restoring the previous display of add project button without the text input form.
+ */
+function restoreAddProjectButtonDisplay() {
+  // Hides and input and create/cancel display takes no space
+  elements.addProjectInput.value = "";
+  elements.addProjectInputContainer.style.display = "none";
+
+  // No need to redo creation of add-project button, just restore add project event listener
+  elements.addProjectButton.addEventListener('click', initAddProjectEvent);
 }
 
 function removeCreatingNewTaskForm() {
