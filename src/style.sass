@@ -23,8 +23,8 @@ body
   height: 100vh
 
 .top-section
-  //#6ca4bc, #76a2a8, #003e3b, #7895ab, #d1000bb5, #13bcab, #00bbd4
-  background-color: #6ca4bc
+  //#6ca4bc, #76a2a8, #003e3b, #7895ab, #d1000bb5, #13bcab, #00bbd4, //#437B98, #447C9C, #437798
+  background-color: #437798
   display: flex
   justify-content: center
   align-items: center
@@ -32,10 +32,10 @@ body
 .header 
   display: flex
   align-items: center
-  color: #f9faf8
+  color: white
   padding-top: 25px
   padding-bottom: 25px
-  height: 85px
+  height: 70px
   font-size: 56px
   width: calc(50% + 50px)
   font-family: fredokaOne
@@ -50,15 +50,13 @@ body
   margin-right: 10px
 
 .menu-icon
-  background: url('./menu-icon.jpg')
-  background-size: 100%
-  background-repeat: no-repeat
-  width: 43px
+  width: 34px
   height: 43px
   position: relative
-  left: 16px
+  left: 20px
   margin-right: auto
   cursor: pointer
+  fill: white
 
 .mid-section
   display: flex
@@ -93,6 +91,7 @@ body
   height: 20px
   width: 20px
   cursor: pointer
+  pointer-events: none
 
 #add-project-button
   text-align: right
@@ -127,7 +126,7 @@ body
   min-width: 17px
   border-radius: 50%
   text-align: center
-  background-color: #6ca4bc
+  background-color: #437798
   color: white
   font-size: 14px
   margin-left: 6px
@@ -183,7 +182,7 @@ body
   cursor: pointer
   background-color: #f3f3f3
 
-.project-buttons-container .delete-project
+.project-buttons-container .project-more-options
   border: none
   border-radius: 10px
   cursor: pointer
@@ -191,9 +190,9 @@ body
 
 .project-button:hover,
 .general:hover,
-.general:hover + .delete-project, 
-.project-button:hover + .delete-project,
-.delete-project:hover
+.general:hover + .project-more-options, 
+.project-button:hover + .project-more-options,
+.project-more-options:hover
   background-color: #d0d6da
 ///CSS hard to style a previous sibling
 //.project-buttons-container button:not(.project-buttons-contaier .project-button ~ button):hover
@@ -220,6 +219,7 @@ label[for="create-project"]
   text-align: center
   width: 100px
   flex-grow: 2
+  padding: 5px
 
 #cancel-on-add-project
   //#d1000bb5, #ffb6b6, #ec9090
@@ -228,6 +228,7 @@ label[for="create-project"]
   border-radius: 10px
   text-align: center
   width: 100px
+  padding: 5px
 
 
 
@@ -275,7 +276,7 @@ label[for="create-project"]
 
 
 
-.delete-project 
+.project-more-options 
   width: 46px
   text-align: center
   display: flex
@@ -289,8 +290,11 @@ label[for="create-project"]
   width: 23px
   height: 23px
   text-align: center
+  display: flex
+  justify-content: center
+  align-items: center
   
-.delete-project:hover, .cancel-task:hover
+.cancel-task:hover
   color: red
 
 #on-add-project
@@ -316,6 +320,7 @@ ul
 
 .add-task
   width: 140px
+  text-align: right
   border: none
   border-radius: 10px
   background-color: white
@@ -325,22 +330,31 @@ ul
 .add-task:hover
   background-color: #d0d6dac7
 
-
+.add-task-icon
+  position: relative
+  top: 4px
+  left: 37px
+  width: 20px
+  height: 20px
+  margin-left: auto
+  pointer-events: none
 
 .general-list-item
   display: none
 
 .task-form 
-  border: solid 1px black
   font-size: 18px
   padding: 15px
   width: 100%
-  background-color: rgb(201, 228, 228)
+  background-color: #437798
   display: none
+  border-radius: 10px
+  box-shadow: 0px 2px 4px 0.3px #292c31
 
 .task-form h2
   text-align: center
   margin-bottom: 5px
+  color: white
 
 .task-form .cancel-task 
   height: 30px
@@ -358,24 +372,39 @@ label[for="name"],
 label[for="date"]
   align-self: center
   min-width: 79px
+  color: white
+  font-weight: bold
+
+label[for="description"]
+  color: white
+  font-weight: bold
 
 input[type="text"]
   align-self: center
-  height: 47px
+  height: 37px
   margin-bottom: 0px
   padding: 10px 14px
+  border-radius: 10px
 
 input[type="date"]
   align-self: center
-  height: 47px
+  height: 53px
   margin-bottom: 0px
   padding: 10px 14px
+  border-radius: 10px
+
+input:checked + label
+  color: green
 
 p
   margin-bottom: 10px
+  font-weight: bold
+  color: white
 
 label[for="low"], label[for="normal"], label[for="high"]
   margin-left: 98px
+  font-weight: bold
+  color: white
 
 input[type="radio"]
   width: max-content
@@ -392,11 +421,16 @@ input[type="radio"]
 textarea 
   padding: 10px
   width: 100%
+  border-radius: 10px
+  font-size: 20px
+  color: #000033
 
 
 #create-task-button
   margin-bottom: 0
   text-align: center
+  border-radius: 10px
+  font-size: 18px
   
 
 .header-add-task-container
@@ -408,12 +442,97 @@ textarea
 
 .add-task
 
-
 #task-list
-
-
+  list-style: none
 
 .left-menu button
 
 #on-add-project input
 
+
+.project-dropdown-container
+  position: absolute
+
+.project-dropdown-content
+  display: flex
+  flex-direction: column
+  justify-content: flex-start
+  position: relative
+  z-index: 5
+  left: 274px
+  top: 34px
+  background-color: #efefef
+  height: 85px
+  width: 85px
+  border-radius: 4px
+  padding: 0
+  box-shadow: 0px 1px 4px -1px #99a6bc
+
+.rename-item, .delete-item
+  border: none
+  padding: 8px
+  margin: 0
+  flex-grow: 1
+  cursor: pointer
+
+.delete-item:hover, .rename-item:hover
+  background-color: #d0d6da5e
+
+.task-item
+  margin-bottom: 8px
+
+.task-container
+  display: flex
+  height: 35px
+  width: 100%
+  align-items: center
+  border-bottom: 1px solid #d8d8d8
+
+.task-checkbox 
+  height: 18px
+  width: 18px
+  border: 1px solid #5c605c
+  border-radius: 3px
+  margin-right: 5px
+  position: relative
+  top: 1px
+  cursor: pointer
+
+.task-title
+
+.task-date
+  margin-left: auto
+
+.task-flag-priority
+  width: 34px
+  height: 34px
+  cursor: pointer
+  fill: rgb(49, 194, 146)
+  margin-left: 5px
+
+.task-edit
+  min-width: 34px
+  height: 34px
+  cursor: pointer
+  fill: #437798
+  margin-left: 5px
+  text-align: center
+
+.task-edit svg
+  position: relative
+  top: 5px
+
+.task-trash
+  min-width: 34px
+  height: 34px
+  cursor: pointer
+  fill: rgba(209, 0, 11, 0.71)
+  margin-left: 5px
+  text-align: center
+
+.task-trash svg
+  position: relative
+  top: 5px
+
+.task-flag-priority:hover, .task-edit:hover, .task-trash:hover
+  background-color: #eee
