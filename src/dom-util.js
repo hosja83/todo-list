@@ -53,8 +53,18 @@ export function setAttributesNS(namespace, element, attributes) {
  * parent HTML Element.
  * 
  * @param {HTMLElement} parent Parent HTML Element to have children append to
- * @param {HTMLElement} children Child HTML Elements to be appended to parent
+ * @param {Array} children Child HTML Elements represented as array to be appended to parent
  */
 export function appendChildren(parent, children) {
   children.forEach(child => parent.appendChild(child));
+}
+
+/**
+ * Inserts newNode after referenceNode.
+ * 
+ * @param {Node} newNode node to be inserted
+ * @param {Node} referenceNode node which is inserted after newNode
+ */
+export function insertAfter(newNode, referenceNode) {
+  referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
