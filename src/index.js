@@ -58,6 +58,7 @@ let projectNameWhereMoreOptionsDropdownDisplayed = undefined;
      requires a click event handler that will undo whatever change occurred.
    - Implement a settings icon top right that can adjust certain features to user's liking
    - Implement animations on svg icons and other elements such as checkboxes on Tasks
+   - Implement a restriction on only allowing one project rename operation at at time
 
    - Requirements to consider changing, make duplicate Tasks allowable so user can organize 
      reoccurring tasks within same project.
@@ -72,6 +73,10 @@ let projectNameWhereMoreOptionsDropdownDisplayed = undefined;
       - Project dynamic id attribute values may become a problem if user creates a project
         with the same name as an existing id in the HTML document like "on-add-project". highly
         unlikely but may occurr. Potential bug that could break our app
+      - When clicking dropdown more options under a project to delete or rename there is a void 
+        where the relative/absolutely positioned dropdown container has left after being positioned
+        that does not accept any UI interactivity. Not that big of a problem since clicking on it
+        logically closes the dropdown but doesnt affect any thing else.
 */
 
 //Load projectlist from localStorage, if null initialize empty project list
@@ -214,12 +219,15 @@ function initAddTaskEvent() {
   //or create new one and select it before adding tasks
   if (document.getElementById('task-list-header').textContent === "" || 
       document.getElementById('task-list-header').textContent === undefined) {
-        alert("Must select a project before adding tasks.");
-        return;
+    alert("Must select a project before adding tasks.");
+    return;
   }
 
   // window is displayed with input formatted form entries
   document.querySelector(".task-form").style.display = 'block';
+
+  // Remove add task button event listener while task form is displayed & user is adding a new task
+  document.getElementById('add-task-button').removeEventListener('click', initAddTaskEvent, false);
 
   // user may click exit X button
   addCancelCreatingNewTaskEventListener();
@@ -420,7 +428,7 @@ function validateTask() {
     return false;
   }
 
-  const project = new Project(elements.addProjectInput.value);
+  const project = new Project(elements.addProjectInput.value.trim());
 
   if (todoListProjects.addProject(project) === "Duplicate") 
     return 'Duplicate'; //alert is handled in project-list object
@@ -544,11 +552,7 @@ function viewProjectTasks(event) {
   renameButton.onclick = initRenameProjectEvent;
 
   deleteButton.setAttribute('onclick', 'deleteProject()');
-  deleteButton.onclick = deleteProject;
-
-  //Set unique id attribute for our unique project dropdown
-  //..........Throwing null reference sometimes, look into bug fix
-  projectDropdownContainer.setAttribute('id', projectName.concat("-more-options-dropdown"));   
+  deleteButton.onclick = deleteProject;   
 
   //Append dropdown more options to DOM 
   //Update flags used by body click event listener & add/remove listener based on display prop
@@ -586,11 +590,101 @@ function clearProjectMoreOptionsDropdownDisplay(event) {
  */
 function initRenameProjectEvent(event) {
   // Remove project more options dropdown display 
-  // Update flags used by body click event listener & add/remove listener based on display prop
+  // Update flags used by body click event listener & remove listener based on display prop
   event.path[2].style.display = 'none';
   isProjectMoreOptionsDropdownDisplayed = false;
   projectNameWhereMoreOptionsDropdownDisplayed = undefined;
   removeDocumentClearProjectMoreOptionsDropdownEventListener();
+
+  //Get project name and project task count respective to event location,
+  //for later use in initial value of text input
+  const projectName = event.path[3].firstElementChild.getAttribute('id');
+  const projectTaskCount = event.path[3].firstElementChild.lastElementChild.textContent;
+
+  //Clear the textContent
+  //Remove project button which contains project icon & moreOptionsdropdown icon DOM Elements
+  const projectButton = event.path[3].removeChild(event.path[3].firstElementChild);
+  const projectMoreOptionsDropdownIcon = event.path[3].removeChild(event.path[3].firstElementChild);
+
+  //Instead of textContent, project task count icon, and 3dot dropdown place an input text field
+  //Display the input text field and listener to user submission by click or enter.
+  //Use a form tag structure just like add project
+  const renameProjectForm = document.createElement('form');
+  renameProjectForm.setAttribute('onsubmit', 'return false');
+  renameProjectForm.noValidate = true;
+
+  const renameProjectIconInputContainer = document.createElement('div');
+  renameProjectIconInputContainer.classList.add('rename-icon-input-container');
+
+  const renameInput = document.createElement('input');
+  DOMUtil.setAttributes(renameInput, {
+    "type": "text",
+    "id": "create-project",
+    "value": projectName, //Initialize value of input with project name 
+  });
+
+  const projectIcon = projectButton.children[0];
+
+  const renameCancelContainer = document.createElement('div');
+  renameCancelContainer.classList.add('rename-cancel-container');
+
+  const renameButton = document.createElement('button');
+  renameButton.textContent = "Rename";
+  DOMUtil.setAttributes(renameButton, {
+    "type": "submit",
+    "class": "rename-button",
+  });
+
+  const renameCancelButton = document.createElement('button');
+  renameCancelButton.textContent = "Cancel";
+  DOMUtil.setAttributes(renameCancelButton, {
+    "type": "button",
+    "class": "rename-cancel-button",
+  });
+
+  DOMUtil.appendChildren(renameProjectForm,[renameProjectIconInputContainer,renameCancelContainer]);
+  DOMUtil.appendChildren(renameProjectIconInputContainer, [projectIcon, renameInput]);
+  DOMUtil.appendChildren(renameCancelContainer, [renameButton, renameCancelButton]);
+
+  //Appends Rename Project Form as first child of project-buttons-container
+  event.path[3].insertAdjacentElement('afterbegin', renameProjectForm);
+  event.path[4].style.height = 'fit-content';
+
+  //Check to see if project being renamed is currently displaying its Tasks, if so then clear
+  //that content so as not to allow 'Add Task' operations while Project is being renamed
+  if (projectName === document.getElementById('task-list-header').textContent) {
+    document.getElementById('task-list-header').textContent = "";
+    DOMUtil.removeAllChildNodes(elements.taskList);
+  }
+
+  //Add Rename/submit event listeners and cancel click event listeners
+  renameCancelButton.addEventListener('click', function() {
+    restoreProjectButtonDisplay(event, projectName, projectTaskCount, projectButton, projectMoreOptionsDropdownIcon)
+  }, false);
+
+  renameButton.addEventListener('click', renameProject, false);
+
+}
+
+//....add boolean flag parameter for renameProject operation to use this function to aid redundancy
+//....boolean flag will test if projectName is changed via rename button or kept unchanged due to cancel button
+function restoreProjectButtonDisplay(event, projectName, projectTaskCount, projectButton, projectMoreOptionsDropdownIcon) {
+  event.path[4].style.height = '49px'; // change project list item height back to original style
+
+  //Restore given projectButton & projectMoreOptionsDropdown
+  const projectButtonsContainer = event.path[3];
+  projectButtonsContainer.removeChild(projectButtonsContainer.firstElementChild);
+
+  projectButton.innerHTML = `<button class="project-button" id="${projectName}"><div class="project-icon"></div>${projectName}<div class="project-task-count-icon">${projectTaskCount}</div></button>`;
+
+  projectButtonsContainer.insertBefore(projectMoreOptionsDropdownIcon, projectButtonsContainer.firstElementChild);
+  projectButtonsContainer.insertBefore(projectButton.firstElementChild, projectButtonsContainer.firstElementChild);
+  
+  projectButtonsContainer.firstElementChild.addEventListener('click', viewProjectTasks, false);
+}
+
+function renameProject(event, projectName) {
+  
 }
 
 /**
@@ -657,4 +751,7 @@ function removeCreatingNewTaskForm() {
 
   //Get rid of the Task display
   document.querySelector('.task-form').style.display = 'none';
+
+  //Restore add task button event listener to restore UI functionality of dynamically adding tasks
+  document.getElementById('add-task-button').addEventListener('click', initAddTaskEvent, false);
 }
