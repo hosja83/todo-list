@@ -66,7 +66,7 @@ body
 .left-menu
   display: flex
   flex-direction: column
-  min-width: 370px
+  width: 370px
   // #f3f3f3, #f4f4f4, #f1f5f8, #efedee, #f3efec, #ebeef0
   background-color: #f3f3f3
   height: calc(100vh - 85px)
@@ -299,6 +299,8 @@ label[for="create-project"]
 
 #on-add-project
   display: none
+
+#add-task-button
 
 button, input
   font-size: 20px
@@ -544,3 +546,41 @@ textarea
 
 .task-flag-priority:hover, .task-edit:hover, .task-trash:hover
   background-color: #eee
+
+.rename-icon-input-container
+  display: flex
+  column-gap: 10px
+  margin-bottom: 10px
+
+.rename-cancel-container
+  display: flex
+  width: 100%
+  column-gap: 5px
+  justify-content: center
+
+.rename-button
+  background-color: #a5eea5
+  font-size: 18px
+  border-radius: 10px
+  text-align: center
+  width: 100px
+  flex-grow: 2
+  padding: 5px
+
+.rename-cancel-button
+  background-color: #ffb6b6
+  font-size: 18px
+  border-radius: 10px
+  text-align: center
+  width: 100px
+  padding: 5px
+
+.rename-icon-input-container .project-icon
+  width: 65px
+  bottom: 6px
+  height: 35px
+  left: 8px
+  margin-right: -8px
+
+.project-buttons-container form 
+  margin-top: 6px
