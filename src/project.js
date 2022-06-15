@@ -20,7 +20,7 @@ export default function Project(name) {
     getTasks: () => {return this.tasks},
     getTaskCount: () => {return this.taskCount},
     setTaskCount: (taskCount) => {this.taskCount = taskCount},
-    setName: (name) => {this.name = name},
+    setName: (name) => {this.name = name.trim()},
     addTask: (task) => {
       // This check doesn't work
       // if (! (newTask instanceof Task) )
