@@ -344,7 +344,7 @@ ul
 .general-list-item
   display: none
 
-.task-form 
+.task-form, .task-form-edit
   font-size: 18px
   padding: 15px
   width: 100%
@@ -352,13 +352,14 @@ ul
   display: none
   border-radius: 10px
   box-shadow: 0px 2px 4px 0.3px #292c31
+  margin-bottom: 15px
 
-.task-form h2
+.task-form h2, .task-form-edit h2
   text-align: center
   margin-bottom: 5px
   color: white
 
-.task-form .cancel-task 
+.task-form .cancel-task , .task-form-edit .cancel-task
   height: 30px
   width: 28px
 
@@ -377,7 +378,7 @@ label[for="date"]
   color: white
   font-weight: bold
 
-label[for="description"]
+label[for="description"], label[for="description-edit"]
   color: white
   font-weight: bold
 
@@ -403,7 +404,8 @@ p
   font-weight: bold
   color: white
 
-label[for="low"], label[for="normal"], label[for="high"]
+label[for="low"], label[for="normal"], label[for="high"],
+label[for="low-edit"], label[for="normal-edit"], label[for="high-edit"]
   margin-left: 98px
   font-weight: bold
   color: white
@@ -411,13 +413,13 @@ label[for="low"], label[for="normal"], label[for="high"]
 input[type="radio"]
   width: max-content
 
-#low
+#low, #low-edit
   margin-left: 32px
 
-#normal
+#normal, #normal-edit
   margin-left: 10px
 
-#high
+#high, #high-edit
   margin-left: 29px
 
 textarea 
@@ -428,7 +430,7 @@ textarea
   color: #000033
 
 
-#create-task-button
+#create-task-button, #update-task-button
   margin-bottom: 0
   text-align: center
   border-radius: 10px
