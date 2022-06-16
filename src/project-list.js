@@ -37,6 +37,11 @@ export default class ProjectList {
     this.projects = projects;
   }
 
+  getProjectIndex(projectName) {
+    const index = this.projects.findIndex(p => p.getName() === projectName);
+    return index;
+  }
+
   addProject(project) {
     // Check if given project is instance of Project
     // if (!(project instanceof Project || project instanceof projectFactory)) {
