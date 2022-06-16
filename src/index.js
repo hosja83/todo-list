@@ -45,7 +45,6 @@ let projectNameWhereMoreOptionsDropdownDisplayed = undefined;
    - Different Colors for different Priorities
    - Move a Task to another Project (button attached to Task that shows dropdown list of projects)
    - Have the optional feature that user can specify exact time task needs to be done by
-   - Have a ... button next to Project name that gives option to rename or delete project
    - Have a button on the existing task that moves the existing task to another project.
      Also if adding features/button icons become crowded, add the vertical three dot icon that
      represents "More" options
@@ -77,6 +76,7 @@ let projectNameWhereMoreOptionsDropdownDisplayed = undefined;
         where the relative/absolutely positioned dropdown container has left after being positioned
         that does not accept any UI interactivity. Not that big of a problem since clicking on it
         logically closes the dropdown but doesnt affect any thing else.
+      - Change event.path methods to parentNode.parentNode.....etc.. for compatibility issues
 */
 
 //Load projectlist from localStorage, if null initialize empty project list
@@ -135,7 +135,7 @@ function onAddTaskEventListener() {
  * Adds event listener for the create button that adds a project to the list of projects.
  */
  function createProjectEventListener() {
-  elements.createButton.addEventListener('click', addProject);
+  document.getElementById('project-form').addEventListener('submit', addProject);
 }
 
 /**
@@ -357,6 +357,9 @@ function displayTask(title, date, priority) {
   editPath.setAttribute('d', "M21.635,6.366c-0.467-0.772-1.043-1.528-1.748-2.229c-0.713-0.708-1.482-1.288-2.269-1.754L19,1C19,1,21,1,22,2S23,5,23,5  L21.635,6.366z M10,18H6v-4l0.48-0.48c0.813,0.385,1.621,0.926,2.348,1.652c0.728,0.729,1.268,1.535,1.652,2.348L10,18z M20.48,7.52  l-8.846,8.845c-0.467-0.771-1.043-1.529-1.748-2.229c-0.712-0.709-1.482-1.288-2.269-1.754L16.48,3.52  c0.813,0.383,1.621,0.924,2.348,1.651C19.557,5.899,20.097,6.707,20.48,7.52z M4,4v16h16v-7l3-3.038V21c0,1.105-0.896,2-2,2H3  c-1.104,0-2-0.895-2-2V3c0-1.104,0.896-2,2-2h11.01l-3.001,3H4z");
   taskEdit.appendChild(editSVG).appendChild(editPath);
 
+  //Add task Edit event listener to allow user to edit the task
+  taskEdit.addEventListener('click', initEditTaskEvent, false);
+
   const taskTrash = document.createElement('div');
   taskTrash.classList.add('task-trash');
   //add task Trash svg
@@ -371,9 +374,50 @@ function displayTask(title, date, priority) {
   trashPath.setAttribute('d', "M32 464C32 490.5 53.5 512 80 512h288c26.5 0 48-21.5 48-48V128H32V464zM304 208C304 199.1 311.1 192 320 192s16 7.125 16 16v224c0 8.875-7.125 16-16 16s-16-7.125-16-16V208zM208 208C208 199.1 215.1 192 224 192s16 7.125 16 16v224c0 8.875-7.125 16-16 16s-16-7.125-16-16V208zM112 208C112 199.1 119.1 192 128 192s16 7.125 16 16v224C144 440.9 136.9 448 128 448s-16-7.125-16-16V208zM432 32H320l-11.58-23.16c-2.709-5.42-8.25-8.844-14.31-8.844H153.9c-6.061 0-11.6 3.424-14.31 8.844L128 32H16c-8.836 0-16 7.162-16 16V80c0 8.836 7.164 16 16 16h416c8.838 0 16-7.164 16-16V48C448 39.16 440.8 32 432 32z");
   taskTrash.appendChild(trashSVG).appendChild(trashPath);
 
+  //Add taskTrash event listener to handle deletion of Task
+  taskTrash.addEventListener('click', deleteTask, false);
+
   //Append Task list item and Task container content to the Task list
   taskList.appendChild(taskListItem).appendChild(taskContainer);
   DOMUtil.appendChildren(taskContainer, [taskCheckbox, taskTitle, taskDate, taskFlagPriority, taskEdit, taskTrash]);
+}
+
+function initEditTaskEvent(event) {
+  //Retrieve event Task date, priority, & description by using task title as search criteria
+  const projectName = document.getElementById('task-list-header').textContent;
+  let taskContainer = event.target;
+  do {
+    taskContainer = taskContainer.parentNode;
+  } while (!taskContainer.classList.contains("task-container"));
+  const taskTitle = taskContainer.childNodes[1].textContent;
+  
+  let task = todoListProjects.getProjects()[todoListProjects.getProjectIndex(projectName)].getTask(taskTitle);
+
+}
+
+/**
+ * Handles the event listener that is called when user clicks on trash icon to delete task.
+ * Deletes the appropriate task calling this event.
+ */
+function deleteTask(event) {
+  //Get the project name from the task-list-header & task title from event path
+  const projectName = document.getElementById('task-list-header').textContent;
+  let taskContainer = event.target;
+  do {
+    taskContainer = taskContainer.parentNode;
+  } while (!taskContainer.classList.contains("task-container"));
+  const taskTitle = taskContainer.childNodes[1].textContent;
+
+  //use the removeTask method to delete task from appropriate project & update local storage
+  todoListProjects.getProjects()[todoListProjects.getProjectIndex(projectName)].removeTask(taskTitle);
+  localStorage.setItem('projectList', JSON.stringify(LocalStorage.convertProjectListToStringObject(todoListProjects)));
+
+  //Remove Task from the task list display/UI
+  taskContainer.parentNode.parentNode.removeChild(taskContainer.parentNode);
+
+  //Update Project Task Count and decrement by 1
+  const projectButton = document.getElementById(projectName);
+  projectButton.lastChild.textContent--;
 }
 
 function validateTask() {
@@ -423,7 +467,7 @@ function validateTask() {
  *          added successfully
  */
  function addProject() {
-  if (elements.addProjectInput.value === "") {
+  if (elements.addProjectInput.value.trim() === "") {
     alert("Project name cannot be blank");
     return false;
   }
@@ -441,6 +485,16 @@ function validateTask() {
   appendProjectToList(project.getName());
   return true;
 }
+
+/**
+ * Validates a given String project name by checking if string is empty or composed of only
+ * white spaces. Returns false if invalid, true if valid.
+ * 
+ * @param {String} projectNameToBeValidated given project name that needs to be validated
+ */
+//function isProjectNameValid(projectNameToBeValidated) {
+//  return projectNameToBeValidated.trim() === "" ? false : true;
+//}
 
 function appendProjectToList(projectName) {
   // Append and display project element to list in left-hand side menu
@@ -547,7 +601,6 @@ function viewProjectTasks(event) {
   projectDropdownContent.appendChild(deleteButton);
   projectDropdownContainer.appendChild(projectDropdownContent);
 
-  //... ... ...Rename event listener, needs implementation
   renameButton.setAttribute('onclick', 'initRenameProjectEvent()');
   renameButton.onclick = initRenameProjectEvent;
 
@@ -596,9 +649,16 @@ function initRenameProjectEvent(event) {
   projectNameWhereMoreOptionsDropdownDisplayed = undefined;
   removeDocumentClearProjectMoreOptionsDropdownEventListener();
 
-  //Get project name and project task count respective to event location,
-  //for later use in initial value of text input
+  //Check if Project is currently undergoing an add Task form operation. If so, then alert user
+  //'Must complete or exit add Task form before renaming Project undergoing the add Task operation
   const projectName = event.path[3].firstElementChild.getAttribute('id');
+  if (projectName === document.getElementById('task-list-header').textContent && 
+      document.querySelector('.task-form').style.display === 'block') {
+    alert(`Complete or exit "${projectName} New Task" form before renaming "${projectName}".`);
+    return;
+  }
+
+  //Gather project task count respective to event location,for later use in initial value of text input
   const projectTaskCount = event.path[3].firstElementChild.lastElementChild.textContent;
 
   //Clear the textContent
@@ -619,7 +679,7 @@ function initRenameProjectEvent(event) {
   const renameInput = document.createElement('input');
   DOMUtil.setAttributes(renameInput, {
     "type": "text",
-    "id": "create-project",
+    "class": "create-project",
     "value": projectName, //Initialize value of input with project name 
   });
 
@@ -659,15 +719,32 @@ function initRenameProjectEvent(event) {
 
   //Add Rename/submit event listeners and cancel click event listeners
   renameCancelButton.addEventListener('click', function() {
-    restoreProjectButtonDisplay(event, projectName, projectTaskCount, projectButton, projectMoreOptionsDropdownIcon)
+    restoreProjectButtonDisplay(event, projectName, projectTaskCount, projectButton, projectMoreOptionsDropdownIcon);
   }, false);
 
-  renameButton.addEventListener('click', renameProject, false);
+  renameButton.addEventListener('click', function() {
+    renameProject(event, projectName, projectTaskCount, projectButton, projectMoreOptionsDropdownIcon);
+  }, false);
 
 }
 
-//....add boolean flag parameter for renameProject operation to use this function to aid redundancy
-//....boolean flag will test if projectName is changed via rename button or kept unchanged due to cancel button
+function renameProject(e, projectName, projectTaskCount, projectButton, projectMoreOptionsDropdownIcon) {
+  //Take the new input value and validate that it's not empty
+  const renameProjectInput = e.path[3].firstElementChild.firstElementChild.lastElementChild;
+  if (renameProjectInput.value.trim() === "") {
+    alert("Project name cannot be blank");
+    return false;
+  }
+  //restore project button, icon, task count, and more options view
+  restoreProjectButtonDisplay(e, renameProjectInput.value, 
+                              projectTaskCount, projectButton, projectMoreOptionsDropdownIcon);
+
+  //update project name in the todolist & localStorage
+  todoListProjects.getProjects()[todoListProjects.getProjectIndex(projectName)].setName(renameProjectInput.value);
+
+  localStorage.setItem('projectList', JSON.stringify(LocalStorage.convertProjectListToStringObject(todoListProjects)));
+}
+
 function restoreProjectButtonDisplay(event, projectName, projectTaskCount, projectButton, projectMoreOptionsDropdownIcon) {
   event.path[4].style.height = '49px'; // change project list item height back to original style
 
@@ -681,10 +758,6 @@ function restoreProjectButtonDisplay(event, projectName, projectTaskCount, proje
   projectButtonsContainer.insertBefore(projectButton.firstElementChild, projectButtonsContainer.firstElementChild);
   
   projectButtonsContainer.firstElementChild.addEventListener('click', viewProjectTasks, false);
-}
-
-function renameProject(event, projectName) {
-  
 }
 
 /**
