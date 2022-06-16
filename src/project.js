@@ -1,6 +1,6 @@
 // project.js
 
-import {_indexOf, _pullAt} from 'lodash';
+import { _pullAt} from 'lodash';
 
 /**
  * Returns a Project object created with the given name and an empty list of Task objects. 
@@ -11,7 +11,7 @@ import {_indexOf, _pullAt} from 'lodash';
  */
 export default function Project(name) {
 
-  this.name = name;
+  this.name = name.trim();
   this.tasks = new Array();
   this.taskCount = 0;
 
@@ -19,6 +19,16 @@ export default function Project(name) {
     getName: () => {return this.name},
     getTasks: () => {return this.tasks},
     getTaskCount: () => {return this.taskCount},
+    getTask: (taskName) => {
+      let task;
+      this.tasks.forEach(t => {
+        if (t.getName() === taskName) {
+          task = t;
+          return;
+        }
+      });
+      return task;
+    },
     setTaskCount: (taskCount) => {this.taskCount = taskCount},
     setName: (name) => {this.name = name.trim()},
     addTask: (task) => {
@@ -36,10 +46,11 @@ export default function Project(name) {
     removeTask: (taskName) => {
       let istaskFound = false;
       let result; 
-      this.tasks.forEach(t => {
+      this.tasks.forEach((t, index) => {
         if (taskName === t.getName()) {
           istaskFound = true;
-          result = _.pullAt(this.tasks, [_indexOf(this.tasks, t)]); //returns array containing remove elements
+          result = _.pullAt(this.tasks, [index]); //returns array containing remove elements
+          return;                       //_indexOf(this.tasks, t) different method to go about it
         }
       });
       if (istaskFound) this.taskCount--;
@@ -59,11 +70,21 @@ export const projectFactory = (n) => {
   let tasks = new Array();
   let taskCount = 0;
   return Object.freeze(Object.seal({
-    getName: () => {return n},
+    getName: () => {return n.trim()},
     getTasks: () => {return tasks},
     getTaskCount: () => {return taskCount},
+    getTask: (taskName) => {
+      let task;
+      tasks.forEach(t => {
+        if (t.getName() === taskName) {
+          task = t;
+          return;
+        }
+      });
+      return task;
+    },
     setTaskCount: (newTaskCount) => {taskCount = newTaskCount},
-    setName: (newName) => {n = newName},
+    setName: (newName) => {n = newName.trim()},
     addTask: (newTask) => {
       // This check doesn't work
       // if (! (newTask instanceof Task) )
@@ -79,10 +100,11 @@ export const projectFactory = (n) => {
     removeTask: (taskName) => {
       let istaskFound = false;
       let result;
-      tasks.forEach(t => {
+      tasks.forEach((t, index) => {
         if (taskName === t.getName()) {
           istaskFound = true;
-          result = _pullAt(tasks, [_indexOf(tasks, t)]); //returns array containing remove elements
+          result = _.pullAt(tasks, [index]); //returns array containing remove elements
+          return;
         }
       });
       if (istaskFound) taskCount--;
