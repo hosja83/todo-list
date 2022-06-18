@@ -1,7 +1,8 @@
 # Todo-List
 <a rel="noreferrer noopener nofollow" href="https://hosja83.github.io/todo-list/">Live Webpage</a>
 - https://hosja83.github.io/todo-list/
-- Version 1.0
+- Version 1.0 Released 06/18/20222
+- More features, support for mobile and various desktop setups, and fixes coming on the way.
 
 ## Tools
 Languages
