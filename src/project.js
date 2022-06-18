@@ -29,8 +29,15 @@ export default function Project(name) {
       });
       return task;
     },
+    getTaskIndex: (taskName) => {
+      return this.tasks.findIndex(t => t.getName() === taskName ? true : false);
+    },
     setTaskCount: (taskCount) => {this.taskCount = taskCount},
     setName: (name) => {this.name = name.trim()},
+    setTask: (taskName, newTask) => {
+      const index = tasks.findIndex(t => t.getName() === taskName ? true : false);
+      this.tasks[index] = newTask;
+    },
     addTask: (task) => {
       // This check doesn't work
       // if (! (newTask instanceof Task) )
@@ -83,8 +90,15 @@ export const projectFactory = (n) => {
       });
       return task;
     },
+    getTaskIndex: (taskName) => {
+      return tasks.findIndex(t => t.getName() === taskName ? true : false);
+    },
     setTaskCount: (newTaskCount) => {taskCount = newTaskCount},
     setName: (newName) => {n = newName.trim()},
+    setTask: (taskName, newTask) => {
+      const index = tasks.findIndex(t => t.getName() === taskName ? true : false);
+      tasks[index] = newTask;
+    },
     addTask: (newTask) => {
       // This check doesn't work
       // if (! (newTask instanceof Task) )
