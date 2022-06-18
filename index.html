@@ -1,1 +1,116 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><script src="https://kit.fontawesome.com/703f595fbc.js" crossorigin="anonymous"></script><title>Todo List</title><script defer="defer" src="./runtime.bundle.js?d1ceec4724bfb6a419c8"></script><script defer="defer" src="./index.bundle.js?d1ceec4724bfb6a419c8"></script></head><body><div class="top-section"><div class="menu-icon"><svg height="45px" width="35px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path class="heroicon-ui" d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"></path></svg></div><div class="header-logo"></div><div class="header">ToDo List</div></div><div class="mid-section"><div class="left-menu"><div class="projects-header-container"><div class="projects">Projects</div><div class="add-icon"></div><button type="button" id="add-project-button">Add Project</button></div><div id="on-add-project"><form id="project-form" onsubmit="return false" novalidate><div class="label-input"><label for="create-project">New Project:</label> <input id="create-project"></div><div class="check-cancel-container"><button type="submit" id="create-on-add-project">Create</button> <button type="button" id="cancel-on-add-project">Cancel</button></div></form></div><ul id="project-list"><li class="general-list-item"><div class="project-buttons-container"><button type="button" class="general"><div class="project-icon"></div>General<div class="project-task-count-icon">0</div></button> <button type="button" class="project-more-options" onclick="displayProjectMoreOptions(event)"><div class="project-3dot-icon"></div></button></div></li></ul></div><div class="todo-content"><div class="header-add-task-container"><h1 id="task-list-header">General</h1><svg class="add-task-icon" height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><style>.cls-1{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><title/><g id="_8.add"><circle class="cls-1" cx="12" cy="12" r="11" style="fill-rule: nonzero; fill: #437798; stroke:  #437798;"/><line class="cls-1" x1="12" x2="12" y1="6" y2="18" style="fill-rule: nonzero; fill: white; stroke: white; stroke-width: 2.5;"/><line class="cls-1" x1="18" x2="6" y1="12" y2="12" style="fill-rule: nonzero; fill: white; stroke: white; stroke-width: 2.5;" transform="matrix(1, 0, 0, 1, 0.000005, -0.000005)"/></g></svg> <button type="button" id="add-task-button" class="add-task">Add Task</button></div><div class="task-form"><h2>New Task Form<span class="cancel-task">X</span></h2><form id="task-form"><div class="label-input"><label for="name">Task Title:</label> <input id="name" name="name" required placeholder="Enter Task Title Here..."></div><div class="label-input"><label for="date">Due Date:</label> <input type="date" id="date" name="date" required></div><p>Please select one of the following Priorities:</p><div class="label-input"><label for="low">Low</label> <input type="radio" id="low" name="priority" value="Low" required></div><div class="label-input"><label for="normal">Normal</label> <input type="radio" id="normal" name="priority" value="Normal" required></div><div class="label-input"><label for="high">High</label> <input type="radio" id="high" name="priority" value="High" required></div><div class="label-input"><label for="description">Description:</label> <textarea id="description" name="description" maxlength="620" placeholder="Describe your task here..." rows="8" cols="52"></textarea></div><button type="submit" id="create-task-button">Create New Task</button></form></div><div class="task-form-edit"><h2>Edit Task Form<span class="cancel-task-edit">X</span></h2><form id="task-form-edit" onsubmit="return false"><div class="label-input"><label for="name-edit">Task Title:</label> <input id="name-edit" name="name-edit" required placeholder="Enter Task Title Here..."></div><div class="label-input"><label for="date-edit">Due Date:</label> <input type="date" id="date-edit" name="date-edit" required></div><p>Please select one of the following Priorities:</p><div class="label-input"><label for="low-edit">Low</label> <input type="radio" id="low-edit" name="priority-edit" value="Low" required></div><div class="label-input"><label for="normal-edit">Normal</label> <input type="radio" id="normal-edit" name="priority-edit" value="Normal" required></div><div class="label-input"><label for="high-edit">High</label> <input type="radio" id="high-edit" name="priority-edit" value="High" required></div><div class="label-input"><label for="description-edit">Description:</label> <textarea id="description-edit" name="description-edit" maxlength="620" placeholder="Describe your task here..." rows="8" cols="52"></textarea></div><button type="submit" id="update-task-button">Update Task</button></form></div><ul id="task-list"></ul></div></div><footer class="footer-container"></footer></body></html>
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Todo List</title>
+  <script defer="defer" src="./runtime.bundle.js?6852a5c9f0031235535d"></script>
+  <script defer="defer" src="./index.bundle.js?6852a5c9f0031235535d"></script>
+</head>
+
+<body>
+  <div class="top-section">
+    <div class="menu-icon"><svg height="45px" width="35px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path class="heroicon-ui"
+          d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z">
+        </path>
+      </svg></div>
+    <div class="header-logo"></div>
+    <div class="header">ToDo List</div>
+  </div>
+  <div class="mid-section">
+    <div class="left-menu">
+      <div class="projects-header-container">
+        <div class="projects">Projects</div>
+        <div class="add-icon"></div><button type="button" id="add-project-button">Add Project</button>
+      </div>
+      <div id="on-add-project">
+        <form id="project-form" onsubmit="return false" novalidate>
+          <div class="label-input"><label for="create-project">New Project:</label> <input id="create-project"></div>
+          <div class="check-cancel-container"><button type="submit" id="create-on-add-project">Create</button> <button
+              type="button" id="cancel-on-add-project">Cancel</button></div>
+        </form>
+      </div>
+      <ul id="project-list">
+        <li class="general-list-item">
+          <div class="project-buttons-container"><button type="button" class="general">
+              <div class="project-icon"></div>General<div class="project-task-count-icon">0</div>
+            </button> <button type="button" class="project-more-options" onclick="displayProjectMoreOptions(event)">
+              <div class="project-3dot-icon"></div>
+            </button></div>
+        </li>
+      </ul>
+    </div>
+    <div class="todo-content">
+      <div class="header-add-task-container">
+        <h1 id="task-list-header">General</h1><svg class="add-task-icon" height="24" width="24" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <style>
+              .cls-1 {
+                fill: none;
+                stroke: #000;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+                stroke-width: 2px;
+              }
+            </style>
+          </defs>
+          <title />
+          <g id="_8.add">
+            <circle class="cls-1" cx="12" cy="12" r="11" style="fill-rule: nonzero; fill: #437798; stroke:  #437798;" />
+            <line class="cls-1" x1="12" x2="12" y1="6" y2="18"
+              style="fill-rule: nonzero; fill: white; stroke: white; stroke-width: 2.5;" />
+            <line class="cls-1" x1="18" x2="6" y1="12" y2="12"
+              style="fill-rule: nonzero; fill: white; stroke: white; stroke-width: 2.5;"
+              transform="matrix(1, 0, 0, 1, 0.000005, -0.000005)" />
+          </g>
+        </svg> <button type="button" id="add-task-button" class="add-task">Add Task</button>
+      </div>
+      <div class="task-form">
+        <h2>New Task Form<span class="cancel-task">X</span></h2>
+        <form id="task-form">
+          <div class="label-input"><label for="name">Task Title:</label> <input id="name" name="name" required
+              placeholder="Enter Task Title Here..."></div>
+          <div class="label-input"><label for="date">Due Date:</label> <input type="date" id="date" name="date"
+              required></div>
+          <p>Please select one of the following Priorities:</p>
+          <div class="label-input"><label for="low">Low</label> <input type="radio" id="low" name="priority" value="Low"
+              required></div>
+          <div class="label-input"><label for="normal">Normal</label> <input type="radio" id="normal" name="priority"
+              value="Normal" required></div>
+          <div class="label-input"><label for="high">High</label> <input type="radio" id="high" name="priority"
+              value="High" required></div>
+          <div class="label-input"><label for="description">Description:</label> <textarea id="description"
+              name="description" maxlength="620" placeholder="Describe your task here..." rows="8" cols="52"></textarea>
+          </div><button type="submit" id="create-task-button">Create New Task</button>
+        </form>
+      </div>
+      <div class="task-form-edit">
+        <h2>Edit Task Form<span class="cancel-task-edit">X</span></h2>
+        <form id="task-form-edit" onsubmit="return false">
+          <div class="label-input"><label for="name-edit">Task Title:</label> <input id="name-edit" name="name-edit"
+              required placeholder="Enter Task Title Here..."></div>
+          <div class="label-input"><label for="date-edit">Due Date:</label> <input type="date" id="date-edit"
+              name="date-edit" required></div>
+          <p>Please select one of the following Priorities:</p>
+          <div class="label-input"><label for="low-edit">Low</label> <input type="radio" id="low-edit"
+              name="priority-edit" value="Low" required></div>
+          <div class="label-input"><label for="normal-edit">Normal</label> <input type="radio" id="normal-edit"
+              name="priority-edit" value="Normal" required></div>
+          <div class="label-input"><label for="high-edit">High</label> <input type="radio" id="high-edit"
+              name="priority-edit" value="High" required></div>
+          <div class="label-input"><label for="description-edit">Description:</label> <textarea id="description-edit"
+              name="description-edit" maxlength="620" placeholder="Describe your task here..." rows="8"
+              cols="52"></textarea></div><button type="submit" id="update-task-button">Update Task</button>
+        </form>
+      </div>
+      <ul id="task-list"></ul>
+    </div>
+  </div>
+  <footer class="footer-container"></footer>
+</body>
+
+</html>
