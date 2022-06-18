@@ -1,5 +1,7 @@
 # Todo-List
-Live Webpage: updating, coming soon...
+Live Webpage
+- https://hosja83.github.io/todo-list/
+- Beta Version 1.0
 
 ## Tools
 Languages
@@ -14,6 +16,7 @@ Frameworks & Libraries
 Web Tools
 - Node.js
 - Webpack
+- NPM
 
 Enter command below in command line to run Jest test cases:
 ```
