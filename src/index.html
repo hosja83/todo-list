@@ -29,7 +29,7 @@
         <div class="projects-header-container">
           <div class="projects">Projects</div>
           <div class="add-icon"></div>
-          <button id="add-project-button">Add Project</button>
+          <button type="button" id="add-project-button">Add Project</button>
         </div>
         <div id="on-add-project">
           <form id="project-form" onsubmit="return false" novalidate>
@@ -46,8 +46,8 @@
         <ul id="project-list">
           <li class="general-list-item">
             <div class="project-buttons-container">
-              <button class="general"><div class="project-icon"></div>General<div class="project-task-count-icon">0</div></button>
-              <button class="project-more-options" onclick="displayProjectMoreOptions(event)"><div class="project-3dot-icon"></div></button>
+              <button type="button" class="general"><div class="project-icon"></div>General<div class="project-task-count-icon">0</div></button>
+              <button type="button" class="project-more-options" onclick="displayProjectMoreOptions(event)"><div class="project-3dot-icon"></div></button>
             </div>
           </li>
         </ul>
@@ -101,32 +101,32 @@
           </form>
         </div>
         <div class="task-form-edit">
-          <h2>Edit Task Form<span class="cancel-task">X</span></h2>
-          <form id="task-form-edit">
+          <h2>Edit Task Form<span class="cancel-task-edit">X</span></h2>
+          <form id="task-form-edit" onsubmit="return false">
             <div class="label-input">
-              <label for="name">Task Title: </label>
-              <input type="text" id="name-edit" name="name" required placeholder="Enter Task Title Here...">
+              <label for="name-edit">Task Title: </label>
+              <input type="text" id="name-edit" name="name-edit" required placeholder="Enter Task Title Here...">
             </div>
             <div class="label-input">
-              <label for="date">Due Date: </label>
-              <input type="date" id="date-edit" name="date" required>
+              <label for="date-edit">Due Date: </label>
+              <input type="date" id="date-edit" name="date-edit" required>
             </div>
             <p>Please select one of the following Priorities: </p>
             <div class="label-input">
               <label for="low-edit">Low</label>
-              <input type="radio" id="low-edit" name="priority" value="Low" required>
+              <input type="radio" id="low-edit" name="priority-edit" value="Low" required>
             </div>
             <div class="label-input">
               <label for="normal-edit">Normal</label>
-              <input type="radio" id="normal-edit" name="priority" value="Normal" required>
+              <input type="radio" id="normal-edit" name="priority-edit" value="Normal" required>
             </div>
             <div class="label-input">
               <label for="high-edit">High</label>
-              <input type="radio" id="high-edit" name="priority" value="High" required>
+              <input type="radio" id="high-edit" name="priority-edit" value="High" required>
             </div>
             <div class="label-input">
               <label for="description-edit">Description: </label>
-              <textarea id="description-edit" name="description" maxlength="620" placeholder="Describe your task here..." rows="8" cols="52"></textarea>
+              <textarea id="description-edit" name="description-edit" maxlength="620" placeholder="Describe your task here..." rows="8" cols="52"></textarea>
             </div>
               <button type="submit" id="update-task-button">Update Task</button>
           </form>
