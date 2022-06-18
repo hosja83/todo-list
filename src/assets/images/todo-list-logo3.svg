@@ -1,0 +1,41 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>.cls-1{fill:#0071af;}.cls-2{fill:#7db6d6;}.cls-3{fill:#00659d;}.cls-4{fill:#5ca4cc;}.cls-5{fill:#59cea7;}.cls-6{fill:#31c292;}.cls-7{fill:#dfdfdf;}.cls-8{fill:#ec9090;}.cls-9{fill:#006095;}.cls-10{fill:#005686;}.cls-11{fill:#4cb08e;}.cls-12{fill:#bebebe;}</style>
+  </defs>
+  <title></title>
+  <g id="_FLAT">
+    <path class="cls-1" d="M72,72V472a16.00016,16.00016,0,0,0,16,16H360a16.00016,16.00016,0,0,0,16-16V72Z"></path>
+    <path class="cls-2" d="M408,24H104A32,32,0,0,0,72,56V72H376V56a32,32,0,0,1,32-32Z"></path>
+    <path class="cls-3" d="M408,24H408a32,32,0,0,1,32,32V296a16,16,0,0,1-16,16H376a0,0,0,0,1,0,0V56a32,32,0,0,1,32-32Z"></path>
+    <path class="cls-4" d="M72,72v32l25.33105,16,25.33179-16,25.332,16,25.32788-16,25.33033,16,25.33105-16,25.33423,16,25.33447-16,25.334,16,25.33545-16,25.33886,16L376,104V72Z"></path>
+    <rect class="cls-5" height="16" width="112" x="176" y="176"></rect>
+    <rect class="cls-5" height="16" width="112" x="176" y="256"></rect>
+    <rect class="cls-5" height="16" width="112" x="176" y="336"></rect>
+    <rect class="cls-6" height="48" rx="16" width="48" x="104" y="160"></rect>
+    <rect class="cls-6" height="48" rx="16" width="48" x="104" y="240"></rect>
+    <rect class="cls-6" height="48" rx="16" width="48" x="104" y="320"></rect>
+    <rect class="cls-6" height="48" rx="16" width="48" x="104" y="400"></rect>
+    <rect class="cls-5" height="16" width="112" x="176" y="416"></rect>
+    <path class="cls-7" d="M344,424l-16,24-16-24V160a16,16,0,0,1,16-16h0a16,16,0,0,1,16,16Z"></path>
+    <path class="cls-8" d="M344,184H312V160a16,16,0,0,1,16-16h0a16,16,0,0,1,16,16Z"></path>
+    <path class="cls-1" d="M72,72V472a16.00016,16.00016,0,0,0,16,16H360a16.00016,16.00016,0,0,0,16-16V72Z"></path>
+    <path class="cls-2" d="M408,24H104A32,32,0,0,0,72,56V72H376V56a32,32,0,0,1,32-32Z"></path>
+    <path class="cls-3" d="M408,24H408a32,32,0,0,1,32,32V296a16,16,0,0,1-16,16H376a0,0,0,0,1,0,0V56a32,32,0,0,1,32-32Z"></path>
+    <rect class="cls-5" height="16" width="112" x="176" y="176"></rect>
+    <rect class="cls-5" height="16" width="112" x="176" y="256"></rect>
+    <rect class="cls-5" height="16" width="112" x="176" y="336"></rect>
+    <rect class="cls-6" height="48" rx="16" width="48" x="104" y="160"></rect>
+    <rect class="cls-6" height="48" rx="16" width="48" x="104" y="240"></rect>
+    <rect class="cls-6" height="48" rx="16" width="48" x="104" y="320"></rect>
+    <rect class="cls-6" height="48" rx="16" width="48" x="104" y="400"></rect>
+    <rect class="cls-5" height="16" width="112" x="176" y="416"></rect>
+    <path class="cls-7" d="M344,424l-16,24-16-24V160a16,16,0,0,1,16-16h0a16,16,0,0,1,16,16Z"></path>
+    <path class="cls-8" d="M344,184H312V160a16,16,0,0,1,16-16h0a16,16,0,0,1,16,16Z"></path>
+    <path class="cls-9" d="M376,472.00488V184.00024c0,163.54493-129.15039,296.9043-291.02271,303.70557A16.05451,16.05451,0,0,0,88,488H360A16.00038,16.00038,0,0,0,376,472.00488Z"></path>
+    <path class="cls-10" d="M421.14648,26.82666A31.87219,31.87219,0,0,0,408,24h0a31.99986,31.99986,0,0,0-32,32V88A64.02492,64.02492,0,0,1,421.14648,26.82666Z"></path>
+    <polygon class="cls-9" points="376 80 88 80 88 112 113.331 128 138.663 112 163.995 128 189.323 112 214.653 128 239.984 112 265.318 128 290.653 112 315.987 128 341.322 112 366.661 128 376 122.103 376 80"></polygon>
+    <path class="cls-4" d="M72,72v32l25.33105,16,25.33179-16,25.332,16,25.32788-16,25.33033,16,25.33105-16,25.33423,16,25.33447-16,25.334,16,25.33545-16,25.33886,16L376,104V72Z"></path>
+    <path class="cls-11" d="M247.82666,432H288V416H268.40869Q258.469,424.42175,247.82666,432Z"></path>
+    <path class="cls-12" d="M312,370.56787V424l16,24,16-24V319.88721A304.10607,304.10607,0,0,1,312,370.56787Z"></path>
+  </g>
+</svg>
