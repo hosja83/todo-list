@@ -6,15 +6,6 @@ module.exports = {
   mode: 'production',
   entry: {
     index: './src/index.js',
-    projeclist: {
-      import: './src/project-list.js',
-      dependOn: 'shared'
-    },
-    project: {
-      import: './src/project.js',
-      dependOn: 'shared',
-    },
-    shared: 'lodash',
   },
   output: {
     filename: '[name].bundle.js',
