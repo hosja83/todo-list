@@ -5,7 +5,6 @@ import * as DOMUtil from './dom-util';
 import ProjectList from './project-list';
 import * as LocalStorage from './local-storage';
 import UserException from './exception';
-import task from './task';
 
 const elements = {
   //Be careful with this implementation because these document function calls might only get called
@@ -87,6 +86,7 @@ let taskInfoContainer, taskEditContainer;
         that does not accept any UI interactivity. Not that big of a problem since clicking on it
         logically closes the dropdown but doesnt affect any thing else.
       - Change event.path methods to parentNode.parentNode.....etc.. for compatibility issues
+      - Change child div elements of button to span elements
 */
 
 //Load projectlist from localStorage, if null initialize empty project list
