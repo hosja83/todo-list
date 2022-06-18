@@ -751,7 +751,41 @@ function appendProjectToList(projectName) {
 
   pContainerElement.firstChild.classList.add('project-button');
   const pIcon = document.createElement('div');
-  pIcon.classList.add('project-icon');
+  pIcon.classList.add('project-icon'); 
+
+  //Dynamically create project-icon svg and append as child
+  const pIconSVG = document.createElementNS("http://www.w3.org/2000/svg",'svg');
+  DOMUtil.setAttributes(pIconSVG, {
+    "version": "1.0",
+    "xmlns": "http://www.w3.org/2000/svg",
+    "width": "52px",
+    "height": "45px",
+    "viewBox": "0 0 338.000000 323.000000",
+    "preserveAspectRatio": "xMidYMid meet",
+  });
+  const pIconG = document.createElementNS("http://www.w3.org/2000/svg",'g');
+  DOMUtil.setAttributes(pIconG, {
+    "transform": "translate(0.000000,323.000000) scale(0.050000,-0.050000)",
+    "fill": "#437798",
+    "stroke": "#437798",
+  });
+  const pIconPath1 = document.createElementNS("http://www.w3.org/2000/svg",'path');
+  pIconPath1.setAttribute('d', "M2312 4281 l-182 -178 -75 68 c-92 85 -114 86 -193 5 -85 -87 -82 -98 77 -257 192 -192 195 -191 461 76 273 273 299 319 228 404 -78 93 -114 80 -316 -118z");
+  const pIconPath2 = document.createElementNS("http://www.w3.org/2000/svg",'path');
+  pIconPath2.setAttribute('d', "M2895 4258 c-37 -21 -44 -91 -22 -223 l12 -74 848 -6 847 -5 0 165 0 165 -825 -1 c-523 0 -838 -8 -860 -21z");
+  const pIconPath3 = document.createElementNS("http://www.w3.org/2000/svg",'path');
+  pIconPath3.setAttribute('d', "M2416 3515 c-37 -36 -114 -118 -173 -183 l-105 -118 -89 87 -89 87 -80 -78 c-104 -102 -104 -101 64 -267 190 -187 181 -189 463 99 276 284 289 306 217 383 -68 72 -126 69 -208 -10z");
+  const pIconPath4 = document.createElementNS("http://www.w3.org/2000/svg",'path');
+  pIconPath4.setAttribute('d', "M2889 3366 c-29 -29 -30 -252 -1 -280 10 -11 1692 -7 1692 3 0 6 0 79 0 161 l0 150 -829 0 c-749 0 -831 -3 -862 -34z");
+  const pIconPath5 = document.createElementNS("http://www.w3.org/2000/svg",'path');
+  pIconPath5.setAttribute('d', "M2099 2620 c-134 -37 -199 -119 -199 -251 0 -297 408 -358 501 -76 55 168 -134 373 -302 327z");
+  const pIconPath6 = document.createElementNS("http://www.w3.org/2000/svg",'path');
+  pIconPath6.setAttribute('d', "M3220 2520 c-170 -5 -322 -18 -338 -28 -24 -16 -21 -259 4 -284 3 -4 388 -8 855 -8 l849 -2 7 166 6 166 -536 0 c-296 0 -676 -4 -847 -10z");
+
+  pIcon.appendChild(pIconSVG).appendChild(pIconG);
+  DOMUtil.appendChildren(pIconG, [pIconPath1,pIconPath2,pIconPath3,pIconPath4,pIconPath5,pIconPath6]);
+
+
   pContainerElement.firstChild.insertBefore(pIcon, pContainerElement.firstChild.firstChild);
 
   const pTaskCount = document.createElement('div');
@@ -993,7 +1027,7 @@ function restoreProjectButtonDisplay(event, projectName, projectTaskCount, proje
   const projectButtonsContainer = event.path[3];
   projectButtonsContainer.removeChild(projectButtonsContainer.firstElementChild);
 
-  projectButton.innerHTML = `<button class="project-button" id="${projectName}"><div class="project-icon"></div>${projectName}<div class="project-task-count-icon">${projectTaskCount}</div></button>`;
+  projectButton.innerHTML = `<button class="project-button" id="${projectName}"><div class="project-icon"><svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="52px" height="45px" viewBox="0 0 338.000000 323.000000" preserveAspectRatio="xMidYMid meet"><g transform="translate(0.000000,323.000000) scale(0.050000,-0.050000)" fill="#437798" stroke="#437798"><path d="M2312 4281 l-182 -178 -75 68 c-92 85 -114 86 -193 5 -85 -87 -82 -98 77 -257 192 -192 195 -191 461 76 273 273 299 319 228 404 -78 93 -114 80 -316 -118z"></path><path d="M2895 4258 c-37 -21 -44 -91 -22 -223 l12 -74 848 -6 847 -5 0 165 0 165 -825 -1 c-523 0 -838 -8 -860 -21z"></path><path d="M2416 3515 c-37 -36 -114 -118 -173 -183 l-105 -118 -89 87 -89 87 -80 -78 c-104 -102 -104 -101 64 -267 190 -187 181 -189 463 99 276 284 289 306 217 383 -68 72 -126 69 -208 -10z"></path><path d="M2889 3366 c-29 -29 -30 -252 -1 -280 10 -11 1692 -7 1692 3 0 6 0 79 0 161 l0 150 -829 0 c-749 0 -831 -3 -862 -34z"></path><path d="M2099 2620 c-134 -37 -199 -119 -199 -251 0 -297 408 -358 501 -76 55 168 -134 373 -302 327z"></path><path d="M3220 2520 c-170 -5 -322 -18 -338 -28 -24 -16 -21 -259 4 -284 3 -4 388 -8 855 -8 l849 -2 7 166 6 166 -536 0 c-296 0 -676 -4 -847 -10z"></path></g></svg></div>${projectName}<div class="project-task-count-icon">${projectTaskCount}</div></button>`;
 
   projectButtonsContainer.insertBefore(projectMoreOptionsDropdownIcon, projectButtonsContainer.firstElementChild);
   projectButtonsContainer.insertBefore(projectButton.firstElementChild, projectButtonsContainer.firstElementChild);
