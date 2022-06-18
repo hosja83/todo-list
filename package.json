@@ -8,7 +8,6 @@
     "build": "webpack",
     "watch": "webpack --watch",
     "start": "webpack serve --open",
-    "server": "node server.js"
   },
   "repository": {
     "type": "git",
