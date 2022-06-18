@@ -1,6 +1,6 @@
 // project.js
 
-import { _pullAt} from 'lodash';
+import { pullAt} from 'lodash';
 
 /**
  * Returns a Project object created with the given name and an empty list of Task objects. 
@@ -56,7 +56,7 @@ export default function Project(name) {
       this.tasks.forEach((t, index) => {
         if (taskName === t.getName()) {
           istaskFound = true;
-          result = _.pullAt(this.tasks, [index]); //returns array containing remove elements
+          result = pullAt(this.tasks, [index]); //returns array containing remove elements
           return;                       //_indexOf(this.tasks, t) different method to go about it
         }
       });
@@ -117,7 +117,7 @@ export const projectFactory = (n) => {
       tasks.forEach((t, index) => {
         if (taskName === t.getName()) {
           istaskFound = true;
-          result = _.pullAt(tasks, [index]); //returns array containing remove elements
+          result = pullAt(tasks, [index]); //returns array containing remove elements
           return;
         }
       });
