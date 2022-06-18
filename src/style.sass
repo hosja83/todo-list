@@ -20,7 +20,7 @@
   font-family: ebGaramond, openSans, Helvetica, sans-serif
 
 body
-  height: 100vh
+  min-height: 100vh
 
 .top-section
   //#6ca4bc, #76a2a8, #003e3b, #7895ab, #d1000bb5, #13bcab, #00bbd4, //#437B98, #447C9C, #437798
@@ -53,7 +53,7 @@ body
   width: 34px
   height: 43px
   position: relative
-  left: 20px
+  left: 26px
   margin-right: auto
   cursor: pointer
   fill: white
@@ -69,9 +69,10 @@ body
   width: 370px
   // #f3f3f3, #f4f4f4, #f1f5f8, #efedee, #f3efec, #ebeef0
   background-color: #f3f3f3
-  height: calc(100vh - 85px)
+  height: calc(100vh - 120px)
   padding: 25px
   padding-top: 20px
+  overflow-y: auto
 
 .todo-content
   background-color: white
@@ -604,3 +605,36 @@ textarea
 
 .project-buttons-container form 
   margin-top: 6px
+
+.footer-container 
+  margin-top: auto
+  padding: 12px
+  background-color: #437798
+  color: white
+  display: flex
+  justify-content: center
+  align-content: center
+  font-size: 20px
+
+footer > a
+  text-decoration: none
+  color: white
+  margin-right: 5px
+
+footer > a:hover
+  text-decoration: underline
+  color: #e3bc83 //orangered //#e3bc83 //#dfab34 //#c67e34
+
+footer > span
+  margin-right: 5px
+
+.github-logo
+  position: relative
+  top: 1px
+  font-size: 22px
+  transition: transform 0.3s ease-in-out
+  cursor: pointer
+
+.github-logo:hover
+  transform: rotate(360deg) scale(1.2)
+  

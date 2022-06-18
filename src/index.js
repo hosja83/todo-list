@@ -6,6 +6,17 @@ import ProjectList from './project-list';
 import * as LocalStorage from './local-storage';
 import UserException from './exception';
 
+//npm install --save-dev @fortawesome/fontawesome-free
+
+import '@fortawesome/fontawesome-free/js/all'
+
+// import '@fortawesome/fontawesome-free/js/fontawesome';
+// import '@fortawesome/fontawesome-free/js/solid';
+// import '@fortawesome/fontawesome-free/js/regular';
+// import '@fortawesome/fontawesome-free/js/brands';
+
+//npm install --save-dev @fortawesome/fontawesome-svg-core @fortawesome/free-brands-svg-icons @fortawesome/free-regular-svg-icons @fortawesome/free-solid-svg-icons
+
 const elements = {
   //Be careful with this implementation because these document function calls might only get called
   //once so if you need updated document information than this might lead to bugs, keep note of this
@@ -87,6 +98,8 @@ let taskInfoContainer, taskEditContainer;
         logically closes the dropdown but doesnt affect any thing else.
       - Change event.path methods to parentNode.parentNode.....etc.. for compatibility issues
       - Change child div elements of button to span elements
+      - When task details container is displayed and task gets edited it does not update the 
+        task details container that is displayed
 */
 
 //Load projectlist from localStorage, if null initialize empty project list
@@ -117,6 +130,7 @@ if (!todoListProjects || todoListProjects.getProjects().length === 0) {
 
 onAddProjectEventListener();
 onAddTaskEventListener();
+displayFooter();
 
 /**
  * Activate event Listener on General project to display it's tasks
@@ -1078,4 +1092,44 @@ function removeEditingExistingTaskForm() {
 
   //Restore edit task click event listener to restore UI functionality of dynamically editing tasks
   taskEditContainer.addEventListener('click', initEditTaskEvent, false);
+}
+
+function displayFooter() {
+  const footer = document.querySelector('.footer-container');
+  displayCopyrightMessageIcon(footer);
+  displayCurrentYear(footer);
+  displayGithubUsernameLink(footer);
+  displayGithubLogo(footer);
+}
+
+function displayCopyrightMessageIcon(footer) {
+  const copyrightMessageIcon = document.createElement('span');
+  copyrightMessageIcon.textContent = 'Copyright \u00A9';
+  footer.appendChild(copyrightMessageIcon);
+}
+
+function displayCurrentYear(footer) {
+  const year = document.createElement('span');
+  year.textContent = `${new Date().getFullYear()}`;
+  footer.appendChild(year);
+}
+
+function displayGithubUsernameLink(footer) {
+  const usernameLink = document.createElement('a');
+  usernameLink.setAttribute('href', 'https://github.com/hosja83/todo-list');
+  usernameLink.setAttribute('target', '_blank');
+  usernameLink.textContent = 'hosja83';
+  footer.appendChild(usernameLink);
+}
+
+function displayGithubLogo(footer) {
+  const githubLink = document.createElement('a');
+  DOMUtil.setAttributes(githubLink, {
+    "href": "https://github.com/hosja83/todo-list",
+    "target": "_blank",
+  });
+  const githubLogo = document.createElement('i');
+  githubLogo.setAttribute('class', 'fa-brands fa-github');
+  githubLogo.classList.add('github-logo');
+  footer.appendChild(githubLink).appendChild(githubLogo);
 }
