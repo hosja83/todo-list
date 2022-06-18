@@ -1,10 +1,11 @@
 import './style.sass';
 import Project, {projectFactory as projectfactory} from './project';
-import {taskfactory} from './task';
+import Task, {taskfactory} from './task';
 import * as DOMUtil from './dom-util';
 import ProjectList from './project-list';
 import * as LocalStorage from './local-storage';
 import UserException from './exception';
+import task from './task';
 
 const elements = {
   //Be careful with this implementation because these document function calls might only get called
@@ -22,6 +23,8 @@ const elements = {
 
 let isProjectMoreOptionsDropdownDisplayed = false;
 let projectNameWhereMoreOptionsDropdownDisplayed = undefined;
+
+let taskInfoContainer, taskEditContainer;
 
 /*
   Features To Implement in Future:
@@ -58,6 +61,13 @@ let projectNameWhereMoreOptionsDropdownDisplayed = undefined;
    - Implement a settings icon top right that can adjust certain features to user's liking
    - Implement animations on svg icons and other elements such as checkboxes on Tasks
    - Implement a restriction on only allowing one project rename operation at at time
+   - Implement a date icon that allows user to edit date of Task by clicking on icon next to date
+   - Implement a different subheading under a project called Events. Add subheadings under projects
+     that distinguish between Tasks and Events. This will require adding an object class Event and
+     rethinking UI display of application.
+   - Implement a Calendar feature where you can view all events & tasks through a calendar UI
+   - Implement subheadings under Projects to organize them into categories, have user freedom to 
+     create customer categories under Projects organizing similar Projects together
 
    - Requirements to consider changing, make duplicate Tasks allowable so user can organize 
      reoccurring tasks within same project.
@@ -148,8 +158,15 @@ function onAddTaskEventListener() {
 /**
  * Adds event listener that listens for clicks on the create new task button to add new tasks.
  */
-function createNewTaskEventListener() {
-    document.getElementById('task-form').addEventListener('submit', addNewTask, false);
+function addCreateNewTaskEventListener() {
+  document.getElementById('task-form').addEventListener('submit', addNewTask, false);
+}
+
+/**
+ * Adds event listener that listens for clicks/submissions on update task button.
+ */
+function addUpdateExistingTaskEventListener() {
+  document.getElementById('task-form-edit').addEventListener('submit', updateTask, false);
 }
 
 /**
@@ -157,6 +174,13 @@ function createNewTaskEventListener() {
  */
 function addCancelCreatingNewTaskEventListener() {
   document.querySelector(".cancel-task").addEventListener('click', removeCreatingNewTaskForm, false);
+}
+
+/**
+ * Add event listener for canceling the editing of an existing task.
+ */
+function addCancelEditingExistingTaskEventListener() {
+  document.querySelector('.cancel-task-edit').addEventListener('click', removeEditingExistingTaskForm, false);
 }
 
 /**
@@ -233,7 +257,7 @@ function initAddTaskEvent() {
   addCancelCreatingNewTaskEventListener();
 
   // user may click create new task button
-  createNewTaskEventListener();
+  addCreateNewTaskEventListener();
 
 }
 
@@ -251,7 +275,7 @@ function addNewTask(e) {
   // Validate Task
   let newTask;
   try {
-    newTask = validateTask();
+    newTask = validateNewTask();
   } catch (e) {
     console.log(e.message, e.name);
     // Alert user if type of error is a duplicate Task title
@@ -303,9 +327,15 @@ function displayTask(title, date, priority) {
   const taskCheckbox = document.createElement('div');
   taskCheckbox.classList.add('task-checkbox');
 
+  //Add Checkbox event listener that handles the event of a Task being completed
+  taskCheckbox.addEventListener('click', handleTaskCompletion, false);
+
   const taskTitle = document.createElement('div');
   taskTitle.classList.add('task-title');
   taskTitle.textContent = title.trim();
+
+  //Add Task name/title event listener that displays more details
+  taskTitle.addEventListener('click', handleTaskDetailsDisplay, false);
 
   // "yyyy-mm-dd" format stored in from input date value
   const taskDate = document.createElement('div');
@@ -382,17 +412,207 @@ function displayTask(title, date, priority) {
   DOMUtil.appendChildren(taskContainer, [taskCheckbox, taskTitle, taskDate, taskFlagPriority, taskEdit, taskTrash]);
 }
 
+function handleTaskCompletion() {
+  //Check if Task a line through or not, if line-through style is applied then undo line-thru and checkmark
+  //If no line-through is found then, apply line-through style and put checkmar in box
+}
+
+function handleTaskDetailsDisplay(event) {
+  // Locate accurate event parent Node up the tree from the event target
+  let taskListItemContainer = event.target;
+  do {
+    taskListItemContainer = taskListItemContainer.parentNode;
+  } while (!taskListItemContainer.classList.contains("task-item"));
+
+  //Check if task detail display is displayed or hidden
+  if (taskListItemContainer.childNodes.length > 1) { 
+    taskListItemContainer.removeChild(taskListItemContainer.lastChild);
+    return; //We handled event by removing task detail display in UI
+  }
+
+  //Retrieve task from todoList using UI textContent/information
+  const task = todoListProjects.getProject(document.getElementById("task-list-header").textContent).getTask(event.target.textContent);
+  
+  //Create Task detail DOM HTML elements
+  const taskDetails = document.createElement('div');
+  taskDetails.classList.add('task-details');
+
+  const titleDateContainer = document.createElement('div');
+  titleDateContainer.classList.add('task-items-container');
+
+  const priorityDescriptionContainer = document.createElement('div');
+  priorityDescriptionContainer.classList.add('task-items-container');
+
+  const titleTaskItem = document.createElement('div');
+  const titleTaskItemBold = document.createElement('b');
+  const taskTitle = document.createElement('span');
+  titleTaskItem.classList.add('task-item');
+  titleTaskItemBold.textContent = "Title: ";
+  taskTitle.textContent = task.getName();
+
+  const dueDateTaskItem = document.createElement('div');
+  const dueDateTaskItemBold = document.createElement('b');
+  const taskDueDate = document.createElement('span');
+  dueDateTaskItem.classList.add('task-item');
+  dueDateTaskItemBold.textContent = "Due Date: ";
+  taskDueDate.textContent = task.getDueDate().slice(5, 7) + '/' + task.getDueDate().slice(8, 10) + '/' +
+                            task.getDueDate().slice(0, 4);
+
+  const priorityTaskItem = document.createElement('div');
+  const priorityTaskItemBold = document.createElement('b');
+  const taskPriority = document.createElement('span');
+  priorityTaskItem.classList.add('task-item');
+  priorityTaskItemBold.textContent = "Priority: ";
+  taskPriority.textContent = task.getPriority();
+
+  const descriptionTaskItem = document.createElement('div');
+  const descriptionTaskItemBold = document.createElement('b');
+  const taskDescription = document.createElement('span');
+  descriptionTaskItem.classList.add('task-item');
+  descriptionTaskItemBold.textContent = "Description: ";
+  taskDescription.textContent = task.getDescription();
+
+  //Append Task detail DOM HTML elements
+  taskDetails.appendChild(titleDateContainer);
+  taskDetails.appendChild(priorityDescriptionContainer);
+
+  titleDateContainer.appendChild(titleTaskItem).appendChild(titleTaskItemBold);
+  titleTaskItem.appendChild(taskTitle);
+
+  titleDateContainer.appendChild(dueDateTaskItem).appendChild(dueDateTaskItemBold);
+  dueDateTaskItem.appendChild(taskDueDate);
+
+  priorityDescriptionContainer.appendChild(priorityTaskItem).appendChild(priorityTaskItemBold);
+  priorityTaskItem.appendChild(taskPriority);
+
+  priorityDescriptionContainer.appendChild(descriptionTaskItem).appendChild(descriptionTaskItemBold);
+  descriptionTaskItem.appendChild(taskDescription);
+
+  //Append taskDetails as child element 
+  taskListItemContainer.appendChild(taskDetails);
+}
+
 function initEditTaskEvent(event) {
   //Retrieve event Task date, priority, & description by using task title as search criteria
   const projectName = document.getElementById('task-list-header').textContent;
-  let taskContainer = event.target;
+  taskInfoContainer = event.target;
   do {
-    taskContainer = taskContainer.parentNode;
-  } while (!taskContainer.classList.contains("task-container"));
-  const taskTitle = taskContainer.childNodes[1].textContent;
+    taskInfoContainer = taskInfoContainer.parentNode;
+  } while (!taskInfoContainer.classList.contains("task-container"));
+  const taskTitle = taskInfoContainer.childNodes[1].textContent;
   
   let task = todoListProjects.getProjects()[todoListProjects.getProjectIndex(projectName)].getTask(taskTitle);
 
+  //Display an update Task Form that is similar to Add Task Form with the task data
+  document.querySelector(".task-form-edit").style.display = 'block';
+  taskEditContainer = taskInfoContainer.childNodes[4];
+  taskEditContainer.removeEventListener('click', initEditTaskEvent, false);
+
+  //Initialize input field values to task information
+  document.getElementById('name-edit').value = task.getName();
+  document.getElementById('date-edit').value = task.getDueDate();
+  document.getElementById('description-edit').value = task.getDescription();
+  switch(task.getPriority()) {
+    case "High":
+      document.getElementById('high-edit').checked = true;
+      break;
+    case "Normal":
+      document.getElementById('normal-edit').checked = true;
+      break;
+    case "Low":
+      document.getElementById('low-edit').checked = true;
+      break;
+  }
+
+  // user may click exit X button
+  addCancelEditingExistingTaskEventListener();
+
+  // user may click update task button
+  addUpdateExistingTaskEventListener();
+}
+
+function updateTask() {
+  // Validate Task
+  let newTask;
+  try {
+    newTask = validateEditedTask(taskInfoContainer);
+  } catch (e) {
+    console.log(e.message, e.name);
+    // Alert user if type of error is a duplicate Task title
+    if (e.message === 'Duplicate Task title')
+      alert('Task already exists.');
+    return 'Invalid Task';
+  }
+  const newTaskConvertedToTaskObject = new Task(newTask.title.trim(), newTask.date, 
+                                                newTask.priority, newTask.description);
+  //Update Todolist & localStorage
+  todoListProjects.getProject(newTask.projectname).setTask(newTask.oldTitle, newTaskConvertedToTaskObject);
+  localStorage.setItem('projectList', JSON.stringify(LocalStorage.convertProjectListToStringObject(todoListProjects)));
+
+  //From taskContainer edit displayed values such as title, date, priority flag color
+  taskInfoContainer.childNodes[1].textContent = newTask.title.trim();
+  taskInfoContainer.childNodes[2].textContent = newTask.date.slice(5, 7) + '/' + 
+                                            newTask.date.slice(8, 10) + '/' +
+                                            newTask.date.slice(0, 4);
+  switch(newTask.priority) {
+    case "High":
+      taskInfoContainer.childNodes[3].style.fill = '#ffef00';
+      break;
+    case "Normal":
+      taskInfoContainer.childNodes[3].style.fill = 'rgb(49, 194, 146)';
+      break;
+    case "Low":
+      taskInfoContainer.childNodes[3].style.fill = '#c9ced2';
+      break;
+  }
+
+  //Remove the Edit Task Form from display
+  removeEditingExistingTaskForm();
+}
+
+function validateEditedTask(taskContainer) {
+  //Store values in variables and check their validity
+  const taskName = document.getElementById('name-edit').value;
+  const taskDueDate = document.getElementById('date-edit').value;
+  const taskDescription = document.getElementById('description-edit').value;
+  const taskPriority = [...document.getElementsByName('priority-edit')].filter(element => {
+    return (element.checked === true) ? true : false;
+  });
+
+  //Compare with other Tasks only exclude original Task being edited by using its index
+  const projectName = document.getElementById('task-list-header').textContent;
+  const taskOldName = taskContainer.childNodes[1].textContent;
+  const taskIndex = todoListProjects.getProject(projectName).getTaskIndex(taskOldName);
+  const duplicateTasks = todoListProjects.getProject(projectName).getTasks().filter((t, index) => {
+    if (index === taskIndex) return false;
+    return (t.getName().trim() === taskName.trim()) ? true : false;
+  });
+
+  //Check for empty task name & duplicate task names
+  if (taskName === "" || taskName === undefined || taskName === null)
+    throw new UserException('Invalid Task title');
+  if (duplicateTasks.length > 0)
+    throw new UserException('Duplicate Task title');
+  
+  //Check for empty Due Date
+  if (taskDueDate === "")
+    throw new UserException('Invalid Due Date');
+
+  //Check for unselected priority
+  if (taskPriority.length < 1)
+    throw new UserException('No priority is selected');
+
+  //Return newly created Task object with necessary information to instantiate a Task object
+  const newTask = {
+    title: taskName,
+    date: taskDueDate,
+    priority: taskPriority[0].value,
+    description: taskDescription,
+    projectname: projectName,
+    oldTitle: taskOldName,
+  };
+
+  return newTask;
 }
 
 /**
@@ -420,7 +640,7 @@ function deleteTask(event) {
   projectButton.lastChild.textContent--;
 }
 
-function validateTask() {
+function validateNewTask() {
   //Store values in variables and check their validity
   const taskName = document.getElementById('name').value;
   const taskDueDate = document.getElementById('date').value;
@@ -431,14 +651,14 @@ function validateTask() {
 
   const projectName = document.getElementById('task-list-header').textContent;
   
-  const filteredTasks = todoListProjects.getProject(projectName).getTasks().filter(t => {
+  const duplicateTasks = todoListProjects.getProject(projectName).getTasks().filter(t => {
     return (t.getName().trim() === taskName.trim()) ? true : false;
   });
 
   //Check for empty task name & duplicate task names
   if (taskName === "" || taskName === undefined || taskName === null)
     throw new UserException('Invalid Task title');
-  if (filteredTasks.length > 0)
+  if (duplicateTasks.length > 0)
     throw new UserException('Duplicate Task title');
   
   //Check for empty Due Date
@@ -539,6 +759,13 @@ function viewProjectTasks(event) {
   //First check if Project Tasks is already being displayed, therefore just return exit function
   if (projectName === document.getElementById('task-list-header').textContent)
     return 'Project already displayed';
+
+  //Check if there is Task Edit operation undergo currently, if so alert User
+  //'Must complete or exit Edit Task form before viewing Project
+  if (document.querySelector(".task-form-edit").style.display === 'block') {
+    alert(`Complete or Exit "Edit Task Form" before viewing "${projectName}".`);
+    return 'Edit Task ongoing';
+  }
 
   //Clear current project's task View by deleting all childNodes
   if (elements.taskList.hasChildNodes)
@@ -827,4 +1054,28 @@ function removeCreatingNewTaskForm() {
 
   //Restore add task button event listener to restore UI functionality of dynamically adding tasks
   document.getElementById('add-task-button').addEventListener('click', initAddTaskEvent, false);
+}
+
+function removeEditingExistingTaskForm() {
+  //Clear all input fields
+  document.getElementById('name-edit').value = "";
+  document.getElementById('date-edit').value = "";
+  document.getElementById('description-edit').value = "";
+
+  //Both of these methods clear radio buttons using checked property
+  //Convert nodelist into array to execute Array.map function
+  [...document.getElementsByName('priority-edit')].map(element => element.checked = false);
+  //Or use forEach function for nodelists that can iterate these types of objects
+  document.getElementsByName('priority-edit').forEach(element => element.checked = false);
+
+  //Clone node to get rid of event listeners
+  var old_element = document.getElementById("update-task-button");
+  var new_element = old_element.cloneNode(true);
+  old_element.parentNode.replaceChild(new_element, old_element);
+
+  //Get rid of the Task display
+  document.querySelector('.task-form-edit').style.display = 'none';
+
+  //Restore edit task click event listener to restore UI functionality of dynamically editing tasks
+  taskEditContainer.addEventListener('click', initEditTaskEvent, false);
 }
