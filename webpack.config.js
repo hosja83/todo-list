@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 //const { dirname } = require('path');
 
 module.exports = {
-  mode: 'development',
+  mode: 'production',
   entry: {
     index: './src/index.js',
   },
@@ -39,12 +39,12 @@ module.exports = {
         type: 'asset/resource',
       },
       {
-       test: /\.(woff|woff2|eot|ttf|otf)$/i,
+       test: /\.(woff|woff2|eot|ttf|otf)$/i, 
        type: 'asset/resource',
       },
     ],
   },
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   devServer: {
     static: './dist',
   },
