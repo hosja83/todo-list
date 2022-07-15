@@ -3,8 +3,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 //const { dirname } = require('path');
 
 module.exports = {
-  mode: 'development',
-  // mode: 'production',
+  // mode: 'development',
+  mode: 'production',
   entry: {
     index: './src/index.js',
   },
@@ -57,19 +57,19 @@ module.exports = {
       },
     ],
   },
-  devtool: 'inline-source-map',
-  // devtool: 'source-map',
+  // devtool: 'inline-source-map',
+  devtool: 'source-map',
   /* For development only */
-  devServer: {
-    static: './dist',
-  },
+  // devServer: {
+  //   static: './dist',
+  // },
   optimization: {
     runtimeChunk: 'single',
   },
   /* Increasing performance during production build mode */
-  // performance: {
-  //   hints: false,
-  //   maxEntrypointSize: 512000,
-  //   maxAssetSize: 512000
-  // },
+  performance: {
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000
+  },
 };
