@@ -1,4 +1,15 @@
 /*
+  Because Task and Project objects are really objects that only have functions stored
+  in their properties we must get the properties of Task and Project objects to store into
+  storage as JSON by calling their getters. JSON cannot directly stringify and parse functions
+  properly. You can use the arguments and body method and use Function interface to recreate
+  the native function but this is making the design implementation too complicated. We have decided
+  to simply traverse through all tasks and use the getters to create Objects that JSON can read.
+  Another easier fix to this would be to make the Task and Project objects return their properties
+  instead of returning their functions. This is remove the need for looping through every project
+  and converting Task objects into readable objects to store in JSON format. This will be a good
+  performance boost and scalability fix in the future if a user has many projects and tasks.
+
   //Example: Task Object Converted to a String Object for saving into Local Storage
   let taskAsString = {
     name: task.getName(),
@@ -78,10 +89,10 @@
   //CONVERT THEM BACK TO THEIR ORIGINAL STATES TO BE READ PROPERLY IN YOUR PROGRAM.
 */
 
-import Task from './task';
-import {projectFactory} from './project.js';
-import ProjectList from './project-list';
-import UserException from './exception';
+import Task from '../model/task';
+import {projectFactory} from '../model/project.js';
+import ProjectList from '../model/project-list';
+import UserException from '../view/exception';
 
 export function convertTaskToStringObject(task) {
   const taskAsString = {

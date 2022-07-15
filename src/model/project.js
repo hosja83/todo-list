@@ -35,7 +35,7 @@ export default function Project(name) {
     setTaskCount: (taskCount) => {this.taskCount = taskCount},
     setName: (name) => {this.name = name.trim()},
     setTask: (taskName, newTask) => {
-      const index = tasks.findIndex(t => t.getName() === taskName ? true : false);
+      const index = this.tasks.findIndex(t => t.getName() === taskName ? true : false);
       this.tasks[index] = newTask;
     },
     addTask: (task) => {

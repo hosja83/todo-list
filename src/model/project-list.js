@@ -1,7 +1,7 @@
 // project-list.js
 
 import { filter } from "lodash";
-import { removeFirst, findFirst } from "./array-util";
+import { removeFirst, findFirst } from "../util/array-util";
 
 /**
  * Constructs a class that adds, deletes, and retrieves Projects from an array of Projects.
