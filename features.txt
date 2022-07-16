@@ -1,0 +1,67 @@
+Features To Implement in Future:
+   - Inbox
+   - Making Inbox the main project/category that always shows up upon page reload, refresh, etc...
+   - Today
+   - Tomorrow
+   - This Week
+   - This Month
+   - View All Tasks from All projects sorted by Project
+   - View All Tasks from All Projects sorted by Date
+   - View All Tasks from All Projects sorted by Priority
+   - Sort Tasks of specific project selected and displayed by priority
+   - Sort Tasks of specific project selected and displayed by date
+   - Sort Projects by Name Alphabetically A - Z
+   - Sort Projects by Name Alphabetically Z - A
+   - Sort Projects by Largest Number of Tasks
+   - Sort Projects by Smallest Number of Tasks
+   - Give User option to move menu nav bar left, top, or right
+   - Mobile App Friendly
+   - Different Colors for different Priorities
+   - Move a Task to another Project (button attached to Task that shows dropdown list of projects)
+   - Have the optional feature that user can specify exact time task needs to be done by
+   - Have a button on the existing task that moves the existing task to another project.
+     Also if adding features/button icons become crowded, add the vertical three dot icon that
+     represents "More" options
+   - Implement a toggle button on the top right hand corner of page switch between light-colored,
+     colored, to dark mode
+   - Implement a search bar for Tasks
+   - Implement a popup div that displays a message upon project creation, deletion or task
+     creation or deletion for a limited interval of time then dissappears. You can also have an
+     undo button attached to this message to revert back to original state before action. This
+     requires a click event handler that will undo whatever change occurred.
+   - Implement a settings icon top right that can adjust certain features to user's liking
+   - Implement animations on svg icons and other elements such as checkboxes on Tasks
+   - Implement a restriction on only allowing one project rename operation at at time
+   - Implement a date icon that allows user to edit date of Task by clicking on icon next to date
+   - Implement a different subheading under a project called Events. Add subheadings under projects
+     that distinguish between Tasks and Events. This will require adding an object class Event and
+     rethinking UI display of application.
+   - Implement a Calendar feature where you can view all events & tasks through a calendar UI
+   - Implement subheadings under Projects to organize them into categories, have user freedom to 
+     create customer categories under Projects organizing similar Projects together
+
+Requirements to consider changing:
+   - make duplicate Tasks allowable so user can organize reoccurring tasks within same project.
+
+Design problems to fix: 
+   - Separate the EventListeners into a separate file
+   - Make sure to remove event listeners added to DOM elements when removing their
+        elements to prevent memory leak issues
+   - Project dynamic id attribute values may become a problem if user creates a project
+        with the same name as an existing id in the HTML document like "on-add-project". highly
+        unlikely but may occurr. Potential bug that could break our app
+   - When clicking dropdown more options under a project to delete or rename there is a void 
+        where the relative/absolutely positioned dropdown container has left after being positioned
+        that does not accept any UI interactivity. Not that big of a problem since clicking on it
+        logically closes the dropdown but doesnt affect any thing else.
+   - Change event.path methods to parentNode.parentNode.....etc.. for compatibility issues
+   - Change child div elements of button to span elements
+   - When task details container is displayed and task gets edited it does not update the 
+        task details container that is displayed
+
+Integrations & Conversions:
+   - Convert JavaScript project into React framework components
+   - Integrate cloud Firebase as backend service provider rather than Github host or use MERN stack
+   - Integrate Login Authentication and relational or non-relational database management instead of
+        Local Storage so users can access information consistently across multiple devices and maximize
+        storage capacity and better security.
